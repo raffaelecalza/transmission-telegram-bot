@@ -2,7 +2,8 @@
 Simple telegram bot for controlling your torrents status
 
 ## Config file
-’’’’’ javascript
+Under construction
+```javascript
 {
     "botToken": "INSERT HERE YOUR TOKEN",
     "ipAddress": "TRANSMISSION IP ADDRESS",
@@ -12,4 +13,4 @@ Simple telegram bot for controlling your torrents status
     },
     "port": 9091
 }
-’’’’’
+```
