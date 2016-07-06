@@ -1,0 +1,14 @@
+{
+    "bot": {
+        "token": "140403272:AAFtIrdXc1dHdH6vuS5hU5zcEITesujExrg",
+        "users": []
+    },
+    "transmission": {
+        "address": "192.168.0.6",
+        "credentials": {
+            "username": "",
+            "password": ""
+        },
+        "port": 9091
+    }
+}
