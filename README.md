@@ -16,6 +16,10 @@ Under construction
 ```
 
 ## Commands
-* <code>/torrentstatus</code> - Get the status of all torrents
-* <code>/addtorrent</code> - Add a new torrent from an url
-* <code>/help</code> - Get the list of available commands
+* <code>/torrentlist</code> - Get the status of all torrents (id - name - status);
+* <code>/addtorrent</code> - Add a new torrent from an url;
+* <code>/torrentstatus</code> - Get all details about a torrent;
+* <code>/removetorrent</code> - Remove a specified torrent from the list;
+* <code>/starttorrent</code> - Start a torrent;
+* <code>/stoptorrent</code> - Stop a torrent;
+* <code>/help</code> - Get the list of available commands;
