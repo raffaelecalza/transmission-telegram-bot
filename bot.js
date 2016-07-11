@@ -12,8 +12,8 @@
 
 var TelegramBot = require('node-telegram-bot-api');
 var Transmission = require('transmission');
-var DateTime = require('node-datetime');
-var pretty = require('prettysize');
+var engine = require('./engine.js');
+var formatter = require('./formatter.js');
 
 var config = require('./config.json');
 
@@ -70,7 +70,7 @@ bot.onText(/\/torrentlist/, function (msg) {
                 var torrent = arg.torrents[i];
                 reply += "Torrent ID: " + torrent.id + "\n";
                 reply += torrent.name;
-                reply += " (<strong>" + getStatusType(torrent.status) + "</strong>)\n";
+                reply += " (<strong>" + engine.GetStatusType(torrent.status) + "</strong>)\n";
 
                 bot.sendMessage(chatId, reply, {
                     parse_mode: "HTML"
@@ -87,7 +87,6 @@ bot.onText(/\/torrentstatus/, function (msg) {
     var key = GetKeyBoard();
     var opts = {
         reply_markup: JSON.stringify({
-            force_reply: true,
             keyboard: key
         })
     };
@@ -113,16 +112,7 @@ bot.onText(/\d+\) .+/, function (msg) {
             throw err;
         }
         if (result.torrents.length > 0) {
-            reply = result.torrents[0].name + "\n";
-            reply += "📅 Added: " + DateTime.create(result.torrents[0].addedDate) + "\n";
-            reply += "⌛️ " + GetRemainingTime(result.torrents[0].eta) + "\n";
-            reply += "Size: " + pretty(result.torrents[0].sizeWhenDone) + "\n";
-            reply += "➗ " + (result.torrents[0].percentDone * 100).toFixed(2) + "%\n";
-            reply += "⬇️ " + pretty(result.torrents[0].rateDownload) + "/s\n";
-            reply += "⬆️ " + pretty(result.torrents[0].rateUpload) + "/s\n";
-            reply += "📂 " + result.torrents[0].downloadDir + "\n";
-            reply += "👥 Peers connected: " + result.torrents[0].peersConnected + "\n";
-            reply += "Status = " + getStatusType(result.torrents[0].status);
+            reply = formatter.TorrentDetails(result.torrents[0]);
         } else
             reply = "Ops, the torrent that you specified is not available... Are you sure that you have sended me a valid torrent name?";
 
@@ -145,27 +135,6 @@ bot.onText(/\/help/, function (msg) {
  *  Functions
  */
 
-// Get torrent state
-function getStatusType(type) {
-    if (type === 0) {
-        return 'STOPPED';
-    } else if (type === 1) {
-        return 'CHECK_WAIT';
-    } else if (type === 2) {
-        return 'CHECK';
-    } else if (type === 3) {
-        return 'DOWNLOAD_WAIT';
-    } else if (type === 4) {
-        return 'DOWNLOAD';
-    } else if (type === 5) {
-        return 'SEED_WAIT';
-    } else if (type === 6) {
-        return 'SEED';
-    } else if (type === 7) {
-        return 'ISOLATED';
-    }
-}
-
 // Create a keyboard with all torrent
 function GetKeyBoard() {
     var keyboard = [];
@@ -173,37 +142,4 @@ function GetKeyBoard() {
         keyboard.push([torrents[i].id + ') ' + torrents[i].name]);
     }
     return keyboard;
-}
-
-// Get remaining time
-function GetRemainingTime(seconds) {
-    if (seconds < 0 || seconds >= (999 * 60 * 60))
-        return 'remaining time unknown';
-
-    var days = Math.floor(seconds / 86400),
-        hours = Math.floor((seconds % 86400) / 3600),
-        minutes = Math.floor((seconds % 3600) / 60),
-        seconds = Math.floor(seconds % 60),
-        d = days + ' ' + (days > 1 ? 'days' : 'day'),
-        h = hours + ' ' + (hours > 1 ? 'hours' : 'hour'),
-        m = minutes + ' ' + (minutes > 1 ? 'minutes' : 'minute'),
-        s = seconds + ' ' + (seconds > 1 ? 'seconds' : 'second');
-
-    if (days) {
-        if (days >= 4 || !hours)
-            return d + ' remaining';
-        return d + ', ' + h + ' remaining';
-    }
-    if (hours) {
-        if (hours >= 4 || !minutes)
-            return h + ' remaining';
-        return h + ', ' + m + ' remaining';
-    }
-    if (minutes) {
-        if (minutes >= 4 || !seconds)
-            return m + ' remaining';
-        return m + ', ' + s + ' remaining';
-    }
-
-    return s + ' remaining';
 }
