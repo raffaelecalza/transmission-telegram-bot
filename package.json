@@ -1,25 +1,28 @@
 {
-  "name": "transmission-telegram-bot",
-  "version": "0.1.0",
-  "description": "Simple telegram bot for controlling your your torrents status",
-  "main": "bot.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/raffaelecalza/transmission-telegram-bot.git"
-  },
-  "author": "Calzà Raffaele <raffaelecalza4@gmail.com>",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/raffaelecalza/transmission-telegram-bot/issues"
-  },
-  "homepage": "https://github.com/raffaelecalza/transmission-telegram-bot#readme",
-  "dependencies": {
-    "date-and-time": "^0.3.0",
-    "node-telegram-bot-api": "^0.23.3",
-    "prettysize": "0.0.3",
-    "transmission": "^0.4.5"
-  }
+    "name": "transmission-telegram-bot",
+    "version": "0.1.0",
+    "description": "Simple telegram bot for controlling your your torrents status",
+    "main": "bot.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/raffaelecalza/transmission-telegram-bot.git"
+    },
+    "author": "Calzà Raffaele <raffaelecalza4@gmail.com>",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/raffaelecalza/transmission-telegram-bot/issues"
+    },
+    "homepage": "https://github.com/raffaelecalza/transmission-telegram-bot#readme",
+    "dependencies": {
+        "date-and-time": "^0.3.0",
+        "node-telegram-bot-api": "^0.23.3",
+        "prettysize": "0.0.3",
+        "transmission": "^0.4.5"
+    },
+    "scripts": {
+        "bot": "node bot.js"
+    }
 }
