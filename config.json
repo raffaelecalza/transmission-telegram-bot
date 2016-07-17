@@ -1,10 +1,10 @@
 {
     "bot": {
-        "token": "140403272:AAFtIrdXc1dHdH6vuS5hU5zcEITesujExrg",
+        "token": "bottotoken",
         "users": []
     },
     "transmission": {
-        "address": "192.168.0.254",
+        "address": "ipaddress",
         "credentials": {
             "username": "",
             "password": ""
