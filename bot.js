@@ -11,9 +11,7 @@
 */
 
 var TelegramBot = require('node-telegram-bot-api');
-var Transmission = require('transmission');
 var engine = require('./engine.js');
-var formatter = require('./formatter.js');
 
 var config = require('./config.json');
 
@@ -22,20 +20,15 @@ var bot = new TelegramBot(config.bot.token, {
     polling: true
 });
 
-console.log('Trying to contact transmission session');
-var transmission = new Transmission({
-    port: config.transmission.port,
-    host: config.transmission.address,
-    username: config.transmission.username,
-    password: config.transmission.password
-});
-
 console.log('Yeah! All is configured... Here are your bot information:');
 bot.getMe().then(function (info) {
     console.log('Bot username: ' + info.username);
 });
 
 // End of configuration
+
+// Action to perform for torrent
+var torrentAction;
 
 // Display every message in the console
 bot.on('message', function (msg) {
@@ -106,9 +99,10 @@ bot.onText(/\d+\) .+/, function (msg) {
         })
     };
 
+    console.log(torrentId);
     if (torrentAction == 'stop')
         engine.StopTorrent(torrentId, (details) => {
-            bot.sendMessage(chatId, 'ww', opts);
+            bot.sendMessage(chatId, JSON.stringify(details), opts);
         }, (err) => {
             bot.sendMessage(chatId, err, opts);
         });
@@ -125,15 +119,18 @@ bot.onText(/\/addtorrent/, function (msg) {
     var chatId = msg.chat.id;
 
     bot.sendMessage(chatId, 'Please send me a torrent url');
+    torrentAction == 'add';
 });
 
 bot.onText(/[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/, function (msg) {
     var chatId = msg.chat.id;
-    engine.AddTorrent(msg.text, (details) => {
-        bot.sendMessage(chatId, 'The torrent was added succesfully, here are some information about it\n' + details);
-    }, (err) => {
-        bot.sendMessage(chatId, 'Ops there was an error, here are some details:\n' + err);
-    });
+
+    if (torrentAction == 'add')
+        engine.AddTorrent(msg.text, (details) => {
+            bot.sendMessage(chatId, 'The torrent was added succesfully, here are some information about it\n' + details);
+        }, (err) => {
+            bot.sendMessage(chatId, err);
+        });
 });
 
 // Help instructions
@@ -144,3 +141,7 @@ bot.onText(/\/help/, function (msg) {
 
     bot.sendMessage(chatId, reply);
 });
+
+engine.TorrentCompleted = (torrent) => {
+    console.log(torrent);
+};

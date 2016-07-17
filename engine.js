@@ -13,6 +13,7 @@ var Transmission = require('transmission');
 var formatter = require('./formatter.js');
 var config = require('./config.json');
 
+console.log('Trying to contact transmission session');
 var transmission = new Transmission({
     port: config.transmission.port,
     host: config.transmission.address,
@@ -29,9 +30,17 @@ exports.UpdateTorrentList = () => {
             console.error(err);
         } else {
             exports.torrents = arg.torrents;
+            console.log("Downloaded the new list of torrents");
+            exports.CheckCompletedTorrents();
         }
     });
-    console.log("Downloaded the new list of torrents");
+}
+
+exports.CheckCompletedTorrents = () => {
+    exports.torrents.forEach((torrent) => {
+        if (torrent.status === 6)
+            exports.TorrentCompleted(torrent);
+    });
 }
 
 // Create a keyboard with all torrent
@@ -47,16 +56,20 @@ exports.GetTorrentsList = (success, error) => {
     transmission.get(function (err, arg) {
         if (err)
             error(formatter.ErrorMessage(err));
-        else
+        else {
+            exports.torrents = arg.torrents;
             success(formatter.TorrentsList(arg.torrents));
+        }
     });
 }
 
 exports.GetTorrentDetails = (id, success, error) => {
     transmission.get(parseInt(id), function (err, result) {
-        if (err)
-            error(err);
-        else if (result.torrents.length > 0)
+        if (err) {
+            error(formatter.ErrorMessage(err));
+            return;
+        }
+        if (result.torrents.length > 0)
             success(formatter.TorrentDetails(result.torrents[0]));
     });
 }
@@ -64,8 +77,10 @@ exports.GetTorrentDetails = (id, success, error) => {
 // Add a torrent from url
 exports.AddTorrent = (url, success, error) => {
     transmission.addUrl(url, function (err, result) {
-        if (err)
-            return error(err);
+        if (err) {
+            error(formatter.ErrorMessage(err));
+            return;
+        }
 
         // Update torrent list
         exports.UpdateTorrentList();
@@ -74,11 +89,18 @@ exports.AddTorrent = (url, success, error) => {
 }
 
 exports.StopTorrent = (id, success, error) => {
-    transmission.stop(id, function (err, result) {
+    transmission.stop(GetHashFromId(id), function (err, result) {
         if (err)
-            error(err);
+            error(formatter.ErrorMessage(err));
         else
             success(result);
+    });
+}
+
+function GetHashFromId(id) {
+    exports.torrents.forEach((torrent) => {
+        if (torrent.id == id)
+            return torrent.hashString;
     });
 }
 
