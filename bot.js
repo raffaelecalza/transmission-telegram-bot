@@ -17,12 +17,12 @@ var formatter = require('./formatter.js');
 
 var config = require('./config.json');
 
-console.log("Initializing the bot...")
+console.log('Initializing the bot...')
 var bot = new TelegramBot(config.bot.token, {
     polling: true
 });
 
-console.log("Trying to contact transmission session");
+console.log('Trying to contact transmission session');
 var transmission = new Transmission({
     port: config.transmission.port,
     host: config.transmission.address,
@@ -30,68 +30,69 @@ var transmission = new Transmission({
     password: config.transmission.password
 });
 
-console.log("Yeah! All is configured... Here are your bot information:");
+console.log('Yeah! All is configured... Here are your bot information:');
 bot.getMe().then(function (info) {
-    console.log("Bot username: " + info.username);
+    console.log('Bot username: ' + info.username);
 });
 
 // End of configuration
 
-var torrents;
-
 // Display every message in the console
 bot.on('message', function (msg) {
-    console.log("\n\n");
-    console.log("Oh.. there's a new incoming message sir!");
-    console.log("Here are some details:");
-    console.log("From user: " + msg.chat.username);
-    console.log("Message id: " + msg.message_id);
-    console.log("Message text: " + msg.text);
+    console.log('\n\n');
+    console.log('Oh.. there\'s a new incoming message sir!');
+    console.log('Here are some details:');
+    console.log('From user: ' + msg.chat.username);
+    console.log('Message id: ' + msg.message_id);
+    console.log('Message text: ' + msg.text);
 });
 
 // Get the list of all torrents
 bot.onText(/\/torrentlist/, function (msg) {
     var chatId = msg.chat.id;
 
-    transmission.get(function (err, arg) {
-        var reply = "";
-        if (err) {
-            console.error(err);
-            bot.sendMessage(chatId, "Error!\n" + err);
-        } else {
-            if (arg.torrents.length == 0)
-                reply += "Mmh 😕 it seems that there isn't any torrent in the list...";
-            else
-                reply += "<strong>List of current torrents and their status:</strong>\n";
-
-            torrents = arg.torrents;
-
-            for (var i = 0; i < arg.torrents.length; i++) {
-                var torrent = arg.torrents[i];
-                reply += "Torrent ID: " + torrent.id + "\n";
-                reply += torrent.name;
-                reply += " (<strong>" + engine.GetStatusType(torrent.status) + "</strong>)\n";
-
-                bot.sendMessage(chatId, reply, {
-                    parse_mode: "HTML"
-                });
-                reply = "";
-            }
-        }
+    engine.GetTorrentsList((msg) => {
+        bot.sendMessage(chatId, msg, {
+            parse_mode: 'HTML'
+        });
+    }, (err) => {
+        bot.sendMessage(chatId, err);
     });
 });
 
 // Get all details about a torrent
 bot.onText(/\/torrentstatus/, function (msg) {
     var chatId = msg.chat.id;
-    var key = GetKeyBoard();
+    var keyb = engine.GetKeyBoard('');
     var opts = {
         reply_markup: JSON.stringify({
-            keyboard: key
+            keyboard: keyb
+        })
+    };
+    if (engine.torrents.length == 0)
+        bot.sendMessage(chatId, 'There isn\'t any torrent here... Please add one using the /addtorrent command');
+    else {
+        bot.sendMessage(chatId, 'Please send me a torrent name :)', opts);
+        torrentAction = 'details';
+    }
+});
+
+// Stop torrent
+bot.onText(/\/stoptorrent/, (msg) => {
+    var chatId = msg.chat.id;
+    var keyb = engine.GetKeyBoard('⛔️');
+    var opts = {
+        reply_markup: JSON.stringify({
+            keyboard: keyb
         })
     };
 
-    bot.sendMessage(chatId, "Please send me a torrent name :)", opts);
+    if (engine.torrents.length == 0)
+        bot.sendMessage(chatId, 'There isn\'t any torrent here... Please add one using the /addtorrent command');
+    else {
+        bot.sendMessage(chatId, 'Please send me a torrent name :)', opts);
+        torrentAction = 'stop';
+    }
 });
 
 bot.onText(/\d+\) .+/, function (msg) {
@@ -105,18 +106,33 @@ bot.onText(/\d+\) .+/, function (msg) {
         })
     };
 
-    transmission.get(parseInt(torrentId), function (err, result) {
-        var reply = "";
-        if (err) {
-            reply = err;
-            throw err;
-        }
-        if (result.torrents.length > 0) {
-            reply = formatter.TorrentDetails(result.torrents[0]);
-        } else
-            reply = "Ops, the torrent that you specified is not available... Are you sure that you have sended me a valid torrent name?";
+    if (torrentAction == 'stop')
+        engine.StopTorrent(torrentId, (details) => {
+            bot.sendMessage(chatId, 'ww', opts);
+        }, (err) => {
+            bot.sendMessage(chatId, err, opts);
+        });
+    else if (torrentAction == 'details')
+        engine.GetTorrentDetails(torrentId, (details) => {
+            bot.sendMessage(chatId, details, opts);
+        }, (err) => {
+            bot.sendMessage(chatId, err, opts);
+        });
+});
 
-        bot.sendMessage(chatId, reply, opts);
+// Add a torrent from url
+bot.onText(/\/addtorrent/, function (msg) {
+    var chatId = msg.chat.id;
+
+    bot.sendMessage(chatId, 'Please send me a torrent url');
+});
+
+bot.onText(/[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/, function (msg) {
+    var chatId = msg.chat.id;
+    engine.AddTorrent(msg.text, (details) => {
+        bot.sendMessage(chatId, 'The torrent was added succesfully, here are some information about it\n' + details);
+    }, (err) => {
+        bot.sendMessage(chatId, 'Ops there was an error, here are some details:\n' + err);
     });
 });
 
@@ -124,22 +140,7 @@ bot.onText(/\d+\) .+/, function (msg) {
 bot.onText(/\/help/, function (msg) {
     var chatId = msg.chat.id;
 
-    var reply = "Available commands:\n/torrentlist - get the list of all torrents\n";
-    reply += "/torrentstatus - get all details of a torrent by specify his ID\n"
-    reply += "/addtorrent - Add new torrent from a link";
+    var reply = engine.GetCommandsList();
 
     bot.sendMessage(chatId, reply);
 });
-
-/*
- *  Functions
- */
-
-// Create a keyboard with all torrent
-function GetKeyBoard() {
-    var keyboard = [];
-    for (var i = 0; i < torrents.length; i++) {
-        keyboard.push([torrents[i].id + ') ' + torrents[i].name]);
-    }
-    return keyboard;
-}

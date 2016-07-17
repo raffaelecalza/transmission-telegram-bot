@@ -9,63 +9,113 @@
     © 2016 - Calzà Raffaele (raffaelecalza4@gmail.com)
     Github repository: https://github.com/raffaelecalza/transmission-telegram-bot
 */
+var Transmission = require('transmission');
+var formatter = require('./formatter.js');
+var config = require('./config.json');
+
+var transmission = new Transmission({
+    port: config.transmission.port,
+    host: config.transmission.address,
+    username: config.transmission.username,
+    password: config.transmission.password
+});
+
 var exports = module.exports = {};
 
-/*
- *  Copied from Transmission web interface
- *  It returns the remaining time of a torrent
- */
-exports.GetRemainingTime = (seconds) => {
-    if (seconds < 0 || seconds >= (999 * 60 * 60))
-        return 'remaining time unknown';
-
-    var days = Math.floor(seconds / 86400),
-        hours = Math.floor((seconds % 86400) / 3600),
-        minutes = Math.floor((seconds % 3600) / 60),
-        seconds = Math.floor(seconds % 60),
-        d = days + ' ' + (days > 1 ? 'days' : 'day'),
-        h = hours + ' ' + (hours > 1 ? 'hours' : 'hour'),
-        m = minutes + ' ' + (minutes > 1 ? 'minutes' : 'minute'),
-        s = seconds + ' ' + (seconds > 1 ? 'seconds' : 'second');
-
-    if (days) {
-        if (days >= 4 || !hours)
-            return d + ' remaining';
-        return d + ', ' + h + ' remaining';
-    }
-    if (hours) {
-        if (hours >= 4 || !minutes)
-            return h + ' remaining';
-        return h + ', ' + m + ' remaining';
-    }
-    if (minutes) {
-        if (minutes >= 4 || !seconds)
-            return m + ' remaining';
-        return m + ', ' + s + ' remaining';
-    }
-
-    return s + ' remaining';
-};
-
-/*
- *  Returns the torrent status in words
- */
-exports.GetStatusType = (type) => {
-    if (type === 0) {
-        return 'STOPPED';
-    } else if (type === 1) {
-        return 'CHECK_WAIT';
-    } else if (type === 2) {
-        return 'CHECK';
-    } else if (type === 3) {
-        return 'DOWNLOAD_WAIT';
-    } else if (type === 4) {
-        return 'DOWNLOAD';
-    } else if (type === 5) {
-        return 'SEED_WAIT';
-    } else if (type === 6) {
-        return 'SEED';
-    } else if (type === 7) {
-        return 'ISOLATED';
-    }
+exports.UpdateTorrentList = () => {
+    transmission.get(function (err, arg) {
+        var reply = "";
+        if (err) {
+            console.error(err);
+        } else {
+            exports.torrents = arg.torrents;
+        }
+    });
+    console.log("Downloaded the new list of torrents");
 }
+
+// Create a keyboard with all torrent
+exports.GetKeyBoard = (char) => {
+    var keyboard = [];
+    exports.torrents.forEach((torrent) => {
+        keyboard.push([char + torrent.id + ') ' + torrent.name]);
+    });
+    return keyboard;
+}
+
+exports.GetTorrentsList = (success, error) => {
+    transmission.get(function (err, arg) {
+        if (err)
+            error(formatter.ErrorMessage(err));
+        else
+            success(formatter.TorrentsList(arg.torrents));
+    });
+}
+
+exports.GetTorrentDetails = (id, success, error) => {
+    transmission.get(parseInt(id), function (err, result) {
+        if (err)
+            error(err);
+        else if (result.torrents.length > 0)
+            success(formatter.TorrentDetails(result.torrents[0]));
+    });
+}
+
+// Add a torrent from url
+exports.AddTorrent = (url, success, error) => {
+    transmission.addUrl(url, function (err, result) {
+        if (err)
+            return error(err);
+
+        // Update torrent list
+        exports.UpdateTorrentList();
+        success(formatter.NewTorrent(result));
+    });
+}
+
+exports.StopTorrent = (id, success, error) => {
+    transmission.stop(id, function (err, result) {
+        if (err)
+            error(err);
+        else
+            success(result);
+    });
+}
+
+
+/*
+ *  Commands list
+ */
+var commands = [
+    {
+        command: '/torrentlist',
+        description: 'Get the list of all torrents'
+    },
+    {
+        command: '/torrentstatus',
+        description: 'Get all details of a torrent by specify his ID'
+    },
+    {
+        command: '/addtorrent',
+        description: 'Add new torrent from a link'
+    },
+    {
+        command: '/starttorrent',
+        description: 'Put a torrent in download'
+    },
+    {
+        command: '/stoptorrent',
+        description: 'Stop a torrent in download'
+    }
+];
+exports.GetCommandsList = () => {
+    var commandsString = '';
+    commands.forEach(function (command) {
+        commandsString += command.command + ' - ' + command.description + '\n';
+    });
+    return commandsString;
+}
+
+// Download the torrent list every 2 minutes
+exports.UpdateTorrentList();
+setInterval(exports.UpdateTorrentList, 60000);
