@@ -1,6 +1,7 @@
 # transmission-telegram-bot
 Simple telegram bot for controlling your torrents status
-
+## How to install it
+In progress
 ## Config file
 Under construction
 ```javascript
