@@ -98,9 +98,17 @@ exports.StopTorrent = (id, success, error) => {
 }
 
 exports.StartTorrent = (id, success, error) => {
-    var arr = [];
     arr.push(id);
     transmission.start(parseInt(id), function (err, result) {
+        if (err)
+            error(formatter.ErrorMessage(err));
+        else
+            success(result);
+    });
+}
+
+exports.RemoveTorrent = (id, success, error) => {
+    transmission.remove(parseInt(id), function (err, result) {
         if (err)
             error(formatter.ErrorMessage(err));
         else

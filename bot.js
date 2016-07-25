@@ -35,9 +35,10 @@ bot.on('message', function (msg) {
     console.log('\n\n');
     console.log('Oh.. there\'s a new incoming message sir!');
     console.log('Here are some details:');
-    console.log('From user: ' + msg.chat.username);
+    console.log('From user: ' + msg.chat.username + '(' + msg.from.id + ')');
     console.log('Message id: ' + msg.message_id);
     console.log('Message text: ' + msg.text);
+    /*if (config.bot.users.indexOf(msg.from.id) == -1) */
 });
 
 // Start message
@@ -95,6 +96,24 @@ bot.onText(/\/torrentstop/, (msg) => {
     }
 });
 
+// Remove torrent
+bot.onText(/\/torrentremove/, function (msg) {
+    var chatId = msg.chat.id;
+    var keyb = engine.GetKeyBoard();
+    var opts = {
+        reply_markup: JSON.stringify({
+            keyboard: keyb
+        })
+    };
+
+    if (engine.torrents.length == 0)
+        bot.sendMessage(chatId, 'There isn\'t any torrent here... Please add one using the /addtorrent command');
+    else {
+        bot.sendMessage(chatId, 'Please send me a torrent name :)', opts);
+        torrentAction = 'remove';
+    }
+})
+
 // Start torrent
 bot.onText(/\/torrentstart/, (msg) => {
     var chatId = msg.chat.id;
@@ -141,7 +160,13 @@ bot.onText(/\d+\) .+/, function (msg) {
             bot.sendMessage(chatId, 'Torrent correctly started\nUse /torrentstatus to see the updated torrents list', opts);
         }, (err) => {
             bot.sendMessage(chatId, err, opts);
-        })
+        });
+    else if (torrentAction == 'remove')
+        engine.RemoveTorrent(torrentId, (details) => {
+            bot.sendMessage(chatId, 'Torrent correctly removed\nUse /torrentstatus to see the updated torrents list', opts);
+        }, (err) => {
+            bot.sendMessage(chatId, err, opts);
+        });
 });
 
 // Add a torrent from url
