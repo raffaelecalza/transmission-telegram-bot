@@ -40,6 +40,13 @@ bot.on('message', function (msg) {
     console.log('Message text: ' + msg.text);
 });
 
+// Start message
+bot.onText(/\/start/, function (msg) {
+    var chatId = msg.chat.id;
+    var reply = 'Hi ' + msg.chat.first_name + ', I\'m your transmission bot... Start send me some commands for control your torrent status. Type /help for a complete list of available commands';
+    bot.sendMessage(chatId, reply);
+});
+
 // Get the list of all torrents
 bot.onText(/\/torrentlist/, function (msg) {
     var chatId = msg.chat.id;
@@ -56,7 +63,7 @@ bot.onText(/\/torrentlist/, function (msg) {
 // Get all details about a torrent
 bot.onText(/\/torrentstatus/, function (msg) {
     var chatId = msg.chat.id;
-    var keyb = engine.GetKeyBoard('');
+    var keyb = engine.GetKeyBoard();
     var opts = {
         reply_markup: JSON.stringify({
             keyboard: keyb
@@ -71,9 +78,9 @@ bot.onText(/\/torrentstatus/, function (msg) {
 });
 
 // Stop torrent
-bot.onText(/\/stoptorrent/, (msg) => {
+bot.onText(/\/torrentstop/, (msg) => {
     var chatId = msg.chat.id;
-    var keyb = engine.GetKeyBoard('⛔️');
+    var keyb = engine.GetKeyBoard();
     var opts = {
         reply_markup: JSON.stringify({
             keyboard: keyb
@@ -88,6 +95,24 @@ bot.onText(/\/stoptorrent/, (msg) => {
     }
 });
 
+// Start torrent
+bot.onText(/\/torrentstart/, (msg) => {
+    var chatId = msg.chat.id;
+    var keyb = engine.GetKeyBoard();
+    var opts = {
+        reply_markup: JSON.stringify({
+            keyboard: keyb
+        })
+    };
+
+    if (engine.torrents.length == 0)
+        bot.sendMessage(chatId, 'There isn\'t any torrent here... Please add one using the /addtorrent command');
+    else {
+        bot.sendMessage(chatId, 'Please send me a torrent name :)', opts);
+        torrentAction = 'start';
+    }
+});
+
 bot.onText(/\d+\) .+/, function (msg) {
     var chatId = msg.chat.id;
 
@@ -99,10 +124,9 @@ bot.onText(/\d+\) .+/, function (msg) {
         })
     };
 
-    console.log(torrentId);
     if (torrentAction == 'stop')
         engine.StopTorrent(torrentId, (details) => {
-            bot.sendMessage(chatId, JSON.stringify(details), opts);
+            bot.sendMessage(chatId, 'Torrent correctly stopped\nUse /torrentstatus to see the updated torrents list', opts);
         }, (err) => {
             bot.sendMessage(chatId, err, opts);
         });
@@ -112,6 +136,12 @@ bot.onText(/\d+\) .+/, function (msg) {
         }, (err) => {
             bot.sendMessage(chatId, err, opts);
         });
+    else if (torrentAction == 'start')
+        engine.StartTorrent(torrentId, (details) => {
+            bot.sendMessage(chatId, 'Torrent correctly started\nUse /torrentstatus to see the updated torrents list', opts);
+        }, (err) => {
+            bot.sendMessage(chatId, err, opts);
+        })
 });
 
 // Add a torrent from url

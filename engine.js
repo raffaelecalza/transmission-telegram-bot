@@ -44,10 +44,10 @@ exports.CheckCompletedTorrents = () => {
 }
 
 // Create a keyboard with all torrent
-exports.GetKeyBoard = (char) => {
+exports.GetKeyBoard = () => {
     var keyboard = [];
     exports.torrents.forEach((torrent) => {
-        keyboard.push([char + torrent.id + ') ' + torrent.name]);
+        keyboard.push([torrent.id + ') ' + torrent.name]);
     });
     return keyboard;
 }
@@ -89,7 +89,7 @@ exports.AddTorrent = (url, success, error) => {
 }
 
 exports.StopTorrent = (id, success, error) => {
-    transmission.stop(GetHashFromId(id), function (err, result) {
+    transmission.stop(parseInt(id), function (err, result) {
         if (err)
             error(formatter.ErrorMessage(err));
         else
@@ -97,13 +97,16 @@ exports.StopTorrent = (id, success, error) => {
     });
 }
 
-function GetHashFromId(id) {
-    exports.torrents.forEach((torrent) => {
-        if (torrent.id == id)
-            return torrent.hashString;
+exports.StartTorrent = (id, success, error) => {
+    var arr = [];
+    arr.push(id);
+    transmission.start(parseInt(id), function (err, result) {
+        if (err)
+            error(formatter.ErrorMessage(err));
+        else
+            success(result);
     });
 }
-
 
 /*
  *  Commands list
@@ -122,11 +125,11 @@ var commands = [
         description: 'Add new torrent from a link'
     },
     {
-        command: '/starttorrent',
+        command: '/torrentstart',
         description: 'Put a torrent in download'
     },
     {
-        command: '/stoptorrent',
+        command: '/torrentstop',
         description: 'Stop a torrent in download'
     }
 ];
@@ -138,6 +141,6 @@ exports.GetCommandsList = () => {
     return commandsString;
 }
 
-// Download the torrent list every 2 minutes
+// Download the torrent list every minute
 exports.UpdateTorrentList();
 setInterval(exports.UpdateTorrentList, 60000);
