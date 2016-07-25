@@ -21,6 +21,6 @@ Under construction
 * ✅<code>/addtorrent</code> - Add a new torrent from an url;
 * ✅<code>/torrentstatus</code> - Get all details about a torrent;
 * <code>/removetorrent</code> - Remove a specified torrent from the list;
-* <code>/starttorrent</code> - Start a torrent;
-* <code>/stoptorrent</code> - Stop a torrent;
+* ✅<code>/starttorrent</code> - Start a torrent;
+* ✅<code>/stoptorrent</code> - Stop a torrent;
 * ✅<code>/help</code> - Get the list of available commands;
