@@ -175,6 +175,7 @@ bot.onText(/\/addtorrent/, function (msg) {
 
     bot.sendMessage(chatId, 'Please send me a torrent url');
     torrentAction == 'add';
+    torrentAction = 'add';
 });
 
 bot.onText(/[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/, function (msg) {
