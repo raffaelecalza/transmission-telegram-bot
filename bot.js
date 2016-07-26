@@ -38,11 +38,11 @@ bot.on('message', function (msg) {
     console.log('From user: ' + msg.chat.username + '(' + msg.from.id + ')');
     console.log('Message id: ' + msg.message_id);
     console.log('Message text: ' + msg.text);
-    /*if (config.bot.users.indexOf(msg.from.id) == -1) */
 });
 
 // Start message
 bot.onText(/\/start/, function (msg) {
+    if (config.bot.users.indexOf(msg.from.id) == -1) return;
     var chatId = msg.chat.id;
     var reply = 'Hi ' + msg.chat.first_name + ' 🙌, I\'m your 🤖\nI\'ve been created to give you all the informations regarding the status of your torrents 😊. Start with /help to get a list of all available commands';
     bot.sendMessage(chatId, reply);
@@ -50,6 +50,7 @@ bot.onText(/\/start/, function (msg) {
 
 // Get the list of all torrents
 bot.onText(/\/torrentlist/, function (msg) {
+    if (config.bot.users.indexOf(msg.from.id) == -1) return;
     var chatId = msg.chat.id;
 
     engine.GetTorrentsList((msg) => {
@@ -66,6 +67,7 @@ bot.onText(/\/torrentlist/, function (msg) {
 
 // Get all details about a torrent
 bot.onText(/\/torrentstatus/, function (msg) {
+    if (config.bot.users.indexOf(msg.from.id) == -1) return;
     var chatId = msg.chat.id;
     var keyb = engine.GetKeyBoard();
     var opts = {
@@ -82,7 +84,8 @@ bot.onText(/\/torrentstatus/, function (msg) {
 });
 
 // Stop torrent
-bot.onText(/\/torrentstop/, (msg) => {
+bot.onText(/\/torrentstop/, function (msg) {
+    if (config.bot.users.indexOf(msg.from.id) == -1) return;
     var chatId = msg.chat.id;
     var keyb = engine.GetKeyBoardActive();
     var opts = {
@@ -101,6 +104,7 @@ bot.onText(/\/torrentstop/, (msg) => {
 
 // Remove torrent
 bot.onText(/\/torrentremove/, function (msg) {
+    if (config.bot.users.indexOf(msg.from.id) == -1) return;
     var chatId = msg.chat.id;
     var keyb = engine.GetKeyBoard();
     var opts = {
@@ -118,7 +122,8 @@ bot.onText(/\/torrentremove/, function (msg) {
 })
 
 // Start torrent
-bot.onText(/\/torrentstart/, (msg) => {
+bot.onText(/\/torrentstart/, function (msg) {
+    if (config.bot.users.indexOf(msg.from.id) == -1) return;
     var chatId = msg.chat.id;
     var keyb = engine.GetKeyBoard();
     var opts = {
@@ -136,6 +141,7 @@ bot.onText(/\/torrentstart/, (msg) => {
 });
 
 bot.onText(/\d+\) .+/, function (msg) {
+    if (config.bot.users.indexOf(msg.from.id) == -1) return;
     var chatId = msg.chat.id;
 
     var torrentId = msg.text.match(/\d+/)[0];
@@ -174,6 +180,7 @@ bot.onText(/\d+\) .+/, function (msg) {
 
 // Add a torrent from url
 bot.onText(/\/addtorrent/, function (msg) {
+    if (config.bot.users.indexOf(msg.from.id) == -1) return;
     var chatId = msg.chat.id;
 
     bot.sendMessage(chatId, 'Please send me a torrent url');
@@ -194,6 +201,7 @@ bot.onText(/[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//
 
 // Help instructions
 bot.onText(/\/help/, function (msg) {
+    if (config.bot.users.indexOf(msg.from.id) == -1) return;
     var chatId = msg.chat.id;
 
     var reply = engine.GetCommandsList();
