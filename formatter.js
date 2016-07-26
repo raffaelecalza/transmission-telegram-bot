@@ -1,3 +1,15 @@
+/*
+  _______                            _         _               ____        _   
+ |__   __|                          (_)       (_)             |  _ \      | |  
+    | |_ __ __ _ _ __  ___ _ __ ___  _ ___ ___ _  ___  _ __   | |_) | ___ | |_ 
+    | | '__/ _` | '_ \/ __| '_ ` _ \| / __/ __| |/ _ \| '_ \  |  _ < / _ \| __|
+    | | | | (_| | | | \__ \ | | | | | \__ \__ \ | (_) | | | | | |_) | (_) | |_ 
+    |_|_|  \__,_|_| |_|___/_| |_| |_|_|___/___/_|\___/|_| |_| |____/ \___/ \__|
+    
+    © 2016 - Calzà Raffaele (raffaelecalza4@gmail.com)
+    Github repository: https://github.com/raffaelecalza/transmission-telegram-bot
+*/
+
 var DateTime = require('date-and-time');
 var pretty = require('prettysize');
 var engine = require('./engine.js');
@@ -5,17 +17,16 @@ var engine = require('./engine.js');
 var exports = module.exports = {};
 
 exports.TorrentsList = (list) => {
-    var formattedString = '';
-    if (list.length == 0)
-        formattedString += 'Mmh 😕 it seems that there isn\'t any torrent in the list...';
-    else
-        formattedString += '<strong>List of current torrents and their status:</strong>\n';
+    var formattedString;
+    if (list.length > 0) {
+        formattedString = '<strong>List of current torrents and their status:</strong>\n';
 
-    list.forEach((torrent) => {
-        formattedString += 'Torrent ID: ' + torrent.id + '\n';
-        formattedString += torrent.name;
-        formattedString += ' (<strong>' + exports.GetStatusType(torrent.status) + '</strong>)\n';
-    });
+        list.forEach((torrent) => {
+            formattedString += 'Torrent ID: ' + torrent.id + '\n';
+            formattedString += torrent.name;
+            formattedString += ' (<strong>' + exports.GetStatusType(torrent.status) + '</strong>)\n';
+        });
+    }
     return formattedString;
 }
 
@@ -49,7 +60,7 @@ exports.NewTorrent = (torrent) => {
 }
 
 exports.ErrorMessage = (err) => {
-    return 'Ops there was an error, here are some details:\n' + err;
+    return 'Ops there was an error 😰, here are some details:\n' + err;
 }
 
 /*
