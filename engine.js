@@ -52,6 +52,15 @@ exports.GetKeyBoard = () => {
     return keyboard;
 }
 
+exports.GetKeyBoardActive = () => {
+    var keyboard = [];
+    exports.torrents.forEach((torrent) => {
+        if (torrent.status > 3)
+            keyboard.push([torrent.id + ') ' + torrent.name]);
+    });
+    return keyboard;
+}
+
 exports.GetTorrentsList = (success, error) => {
     transmission.get(function (err, arg) {
         if (err)
@@ -92,18 +101,23 @@ exports.StopTorrent = (id, success, error) => {
     transmission.stop(parseInt(id), function (err, result) {
         if (err)
             error(formatter.ErrorMessage(err));
-        else
+        else {
+            // Update torrent list
+            exports.UpdateTorrentList();
             success(result);
+        }
     });
 }
 
 exports.StartTorrent = (id, success, error) => {
-    arr.push(id);
     transmission.start(parseInt(id), function (err, result) {
         if (err)
             error(formatter.ErrorMessage(err));
-        else
+        else {
+            // Update torrent list
+            exports.UpdateTorrentList();
             success(result);
+        }
     });
 }
 
@@ -111,10 +125,23 @@ exports.RemoveTorrent = (id, success, error) => {
     transmission.remove(parseInt(id), function (err, result) {
         if (err)
             error(formatter.ErrorMessage(err));
-        else
+        else {
+            // Update torrent list
+            exports.UpdateTorrentList();
             success(result);
+        }
     });
 }
+
+// Hide keyboard for bot
+exports.HideKeyBoardOpts = {
+    reply_markup: JSON.stringify({
+        hide_keyboard: true
+    })
+}
+
+// String to send when the list of torrents is empty
+exports.NoTorrentText = 'Mmh 😕 it seems that there isn\'t any torrent in the list...\nAdd one by using the /addtorrent command 😉';
 
 /*
  *  Commands list
@@ -139,10 +166,14 @@ var commands = [
     {
         command: '/torrentstop',
         description: 'Stop a torrent in download'
+    },
+    {
+        command: '/torrentremove',
+        description: '⚠️ Remove the torrent from the list (be careful)'
     }
 ];
 exports.GetCommandsList = () => {
-    var commandsString = '';
+    var commandsString = '📋 Available commands:\n';
     commands.forEach(function (command) {
         commandsString += command.command + ' - ' + command.description + '\n';
     });
