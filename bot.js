@@ -55,11 +55,9 @@ bot.onText(/\/torrentlist/, function (msg) {
 
     engine.GetTorrentsList((msg) => {
         if (!msg)
-            bot.sendMessage(chatId, engine.NoTorrentText);
+            bot.sendMessage(chatId, engine.NoTorrentText, engine.HideKeyBoardOpts);
         else
-            bot.sendMessage(chatId, msg, {
-                parse_mode: 'HTML'
-            });
+            bot.sendMessage(chatId, msg, engine.HideKeyBoardOpts);
     }, (err) => {
         bot.sendMessage(chatId, err);
     });
@@ -146,35 +144,29 @@ bot.onText(/\d+\) .+/, function (msg) {
 
     var torrentId = msg.text.match(/\d+/)[0];
 
-    var opts = {
-        reply_markup: JSON.stringify({
-            hide_keyboard: true
-        })
-    };
-
     if (torrentAction == 'stop')
         engine.StopTorrent(torrentId, (details) => {
-            bot.sendMessage(chatId, 'Torrent correctly stopped\nUse /torrentstatus to see the updated torrents list', opts);
+            bot.sendMessage(chatId, 'Torrent correctly stopped\nUse /torrentstatus to see the updated torrents list', engine.HideKeyBoardOpts);
         }, (err) => {
-            bot.sendMessage(chatId, err, opts);
+            bot.sendMessage(chatId, err, engine.HideKeyBoardOpts);
         });
     else if (torrentAction == 'details')
         engine.GetTorrentDetails(torrentId, (details) => {
-            bot.sendMessage(chatId, details, opts);
+            bot.sendMessage(chatId, details, engine.HideKeyBoardOpts);
         }, (err) => {
-            bot.sendMessage(chatId, err, opts);
+            bot.sendMessage(chatId, err, engine.HideKeyBoardOpts);
         });
     else if (torrentAction == 'start')
         engine.StartTorrent(torrentId, (details) => {
-            bot.sendMessage(chatId, 'Torrent correctly started\nUse /torrentstatus to see the updated torrents list', opts);
+            bot.sendMessage(chatId, 'Torrent correctly started\nUse /torrentstatus to see the updated torrents list', engine.HideKeyBoardOpts);
         }, (err) => {
-            bot.sendMessage(chatId, err, opts);
+            bot.sendMessage(chatId, err, engine.HideKeyBoardOpts);
         });
     else if (torrentAction == 'remove')
         engine.RemoveTorrent(torrentId, (details) => {
-            bot.sendMessage(chatId, 'Torrent correctly removed\nUse /torrentstatus to see the updated torrents list', opts);
+            bot.sendMessage(chatId, 'Torrent correctly removed\nUse /torrentstatus to see the updated torrents list', engine.HideKeyBoardOpts);
         }, (err) => {
-            bot.sendMessage(chatId, err, opts);
+            bot.sendMessage(chatId, err, engine.HideKeyBoardOpts);
         });
 });
 
@@ -189,7 +181,7 @@ bot.onText(/\/addtorrent/, function (msg) {
 
 bot.onText(/[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/, function (msg) {
     var chatId = msg.chat.id;
-    
+
     console.log(msg.text);
     if (torrentAction == 'add')
         engine.AddTorrent(msg.text, (details) => {
@@ -211,6 +203,6 @@ bot.onText(/\/help/, function (msg) {
 
 engine.TorrentCompleted = (torrent) => {
     config.bot.users.forEach((userId) => {
-        bot.sendMessage(userId, torrent);
+        bot.sendMessage(userId, 'torrentcompletato');
     });
 };

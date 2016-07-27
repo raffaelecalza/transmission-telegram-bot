@@ -22,9 +22,9 @@ exports.TorrentsList = (list) => {
         formattedString = '<strong>List of current torrents and their status:</strong>\n';
 
         list.forEach((torrent) => {
-            formattedString += 'Torrent ID: ' + torrent.id + '\n';
             formattedString += torrent.name;
-            formattedString += ' (<strong>' + exports.GetStatusType(torrent.status) + '</strong>)\n';
+            formattedString += ' (<b>' + exports.GetStatusType(torrent.status) + '</b>)\n';
+            formattedString += '➗ ' + (torrent.percentDone * 100).toFixed(2) + '%\n\n';
         });
     }
     return formattedString;
@@ -32,7 +32,7 @@ exports.TorrentsList = (list) => {
 
 exports.TorrentDetails = (torrent) => {
     var formattedString;
-    formattedString = torrent.name + "\n";
+    formattedString = torrent.name + '\n\n';
 
     var mEpoch = parseInt(torrent.addedDate);
     // To milliseconds
@@ -40,22 +40,22 @@ exports.TorrentDetails = (torrent) => {
 
     var addedDate = new Date(mEpoch);
 
-    formattedString += "📅 Added: " + DateTime.format(addedDate, 'YYYY/MM/DD HH:mm:ss') + "\n";
-    formattedString += "⌛️ " + exports.GetRemainingTime(torrent.eta) + "\n";
-    formattedString += "Size: " + pretty(torrent.sizeWhenDone) + "\n";
-    formattedString += "➗ " + (torrent.percentDone * 100).toFixed(2) + "%\n";
-    formattedString += "⬇️ " + pretty(torrent.rateDownload) + "/s\n";
-    formattedString += "⬆️ " + pretty(torrent.rateUpload) + "/s\n";
-    formattedString += "📂 " + torrent.downloadDir + "\n";
-    formattedString += "👥 Peers connected: " + torrent.peersConnected + "\n";
-    formattedString += "Status = " + exports.GetStatusType(torrent.status);
+    formattedString += 'Status = <b>' + exports.GetStatusType(torrent.status) + '</b>\n';
+    formattedString += '⌛️ ' + exports.GetRemainingTime(torrent.eta) + '\n';
+    formattedString += '➗ <b>' + (torrent.percentDone * 100).toFixed(2) + '%</b>\n';
+    formattedString += '⬇️ ' + pretty(torrent.rateDownload) + '/s - ';
+    formattedString += '⬆️ ' + pretty(torrent.rateUpload) + '/s\n\n';
+    formattedString += 'Size: ' + pretty(torrent.sizeWhenDone) + '\n';
+    formattedString += '📅 Added: ' + DateTime.format(addedDate, 'DD/MM/YYYY HH:mm:ss') + '\n';
+    formattedString += '📂 ' + torrent.downloadDir + '\n';
+    formattedString += '👥 Peers connected: ' + torrent.peersConnected;
 
     return formattedString;
 }
 
 exports.NewTorrent = (torrent) => {
-    var formattedString = "ID torrent: " + torrent.id;
-    formattedString += "\nTorrent name: " + torrent.name;
+    var formattedString = 'ID torrent: ' + torrent.id;
+    formattedString += '\nTorrent name: ' + torrent.name;
     return formattedString;
 }
 

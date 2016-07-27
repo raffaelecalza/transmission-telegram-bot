@@ -137,7 +137,9 @@ exports.RemoveTorrent = (id, success, error) => {
 exports.HideKeyBoardOpts = {
     reply_markup: JSON.stringify({
         hide_keyboard: true
-    })
+    }),
+    parse_mode: 'html',
+    disable_web_page_preview: true
 }
 
 // String to send when the list of torrents is empty
