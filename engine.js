@@ -22,24 +22,29 @@ var transmission = new Transmission({
 });
 
 var exports = module.exports = {};
+var oldList = exports.torrents = [];
 
 exports.UpdateTorrentList = () => {
     transmission.get(function (err, arg) {
-        var reply = "";
         if (err) {
             console.error(err);
         } else {
+            oldList = exports.torrents;
             exports.torrents = arg.torrents;
             console.log("Downloaded the new list of torrents");
+
             exports.CheckCompletedTorrents();
         }
     });
 }
 
 exports.CheckCompletedTorrents = () => {
-    exports.torrents.forEach((torrent) => {
-        if (torrent.status === 6)
-            exports.TorrentCompleted(torrent);
+    oldList.forEach((torrent) => {
+        // Search the torrent in the new list
+        for (var i = 0; i < exports.torrents.length; i++) {
+            if (torrent.name === exports.torrents[i].name && torrent.status != exports.torrents[i].status && exports.torrents[i].status === 6)
+                exports.TorrentCompleted(torrent);
+        }
     });
 }
 
@@ -184,4 +189,5 @@ exports.GetCommandsList = () => {
 
 // Download the torrent list every minute
 exports.UpdateTorrentList();
+
 setInterval(exports.UpdateTorrentList, 60000);
