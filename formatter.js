@@ -18,16 +18,23 @@ var exports = module.exports = {};
 
 exports.TorrentsList = (list) => {
     var formattedString;
+    var messages = [];
     if (list.length > 0) {
         formattedString = '<strong>List of current torrents and their status:</strong>\n';
 
         list.forEach((torrent) => {
+            formattedString += '<b>ID: ' + torrent.id + '</b>\n'
             formattedString += torrent.name;
             formattedString += ' (<b>' + exports.GetStatusType(torrent.status) + '</b>)\n';
-            formattedString += '➗ ' + (torrent.percentDone * 100).toFixed(2) + '%\n\n';
+            formattedString += '➗ ' + (torrent.percentDone * 100).toFixed(2) + '%\n';
+            formattedString += '⌛️ ' + exports.GetRemainingTime(torrent.eta) + '\n';
+            formattedString += '⬇️ ' + pretty(torrent.rateDownload) + '/s - ';
+            formattedString += '⬆️ ' + pretty(torrent.rateUpload) + '/s';
+            messages.push(formattedString);
+            formattedString = '';
         });
     }
-    return formattedString;
+    return messages;
 }
 
 exports.TorrentDetails = (torrent) => {

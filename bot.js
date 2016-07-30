@@ -53,11 +53,13 @@ bot.onText(/\/torrentlist/, function (msg) {
     if (config.bot.users.indexOf(msg.from.id) == -1) return;
     var chatId = msg.chat.id;
 
-    engine.GetTorrentsList((msg) => {
-        if (!msg)
+    engine.GetTorrentsList((messages) => {
+        if (messages.length == 0)
             bot.sendMessage(chatId, engine.NoTorrentText, engine.HideKeyBoardOpts);
         else
-            bot.sendMessage(chatId, msg, engine.HideKeyBoardOpts);
+            messages.forEach((msg) => {
+                bot.sendMessage(chatId, msg, engine.HideKeyBoardOpts);
+            });
     }, (err) => {
         bot.sendMessage(chatId, err);
     });
