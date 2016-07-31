@@ -38,6 +38,7 @@ exports.TorrentsList = (list) => {
 }
 
 exports.TorrentDetails = (torrent) => {
+    console.log(JSON.stringify(torrent));
     var formattedString;
     formattedString = torrent.name + '\n\n';
 
@@ -68,6 +69,13 @@ exports.NewTorrent = (torrent) => {
 
 exports.ErrorMessage = (err) => {
     return 'Ops there was an error 😰, here are some details:\n' + err;
+}
+
+exports.FormatComplete = (torrent) => {
+    var msg = 'Oh, a torrent has been downloaded completely 🙌\nHere are some details 😏:\n';
+    msg += 'Size: ' + pretty(torrent.sizeWhenDone) + '\n';
+    msg += '📂 ' + torrent.downloadDir + '\n';
+    return msg;
 }
 
 /*

@@ -43,7 +43,7 @@ exports.CheckCompletedTorrents = () => {
         // Search the torrent in the new list
         for (var i = 0; i < exports.torrents.length; i++) {
             if (torrent.name === exports.torrents[i].name && torrent.status != exports.torrents[i].status && exports.torrents[i].status === 6)
-                exports.TorrentCompleted(torrent);
+                exports.TorrentCompleted(formatter.FormatComplete(torrent));
         }
     });
 }
@@ -139,12 +139,23 @@ exports.RemoveTorrent = (id, success, error) => {
 }
 
 // Hide keyboard for bot
-exports.HideKeyBoardOpts = {
+exports.ListOfCommandsKeyBoard = {
     reply_markup: JSON.stringify({
-        hide_keyboard: true
+        keyboard: [
+            ['List of all torrents'],
+            ['Status', 'Add torrent'],
+            ['▶️ Start', '⏸ Pause', '❌ Remove'],
+            ['❔ Help']
+        ]
     }),
     parse_mode: 'html',
     disable_web_page_preview: true
+}
+
+exports.HideKeyBoard = {
+    reply_markup: JSON.stringify({
+        hide_keyboard: true
+    })
 }
 
 // String to send when the list of torrents is empty
