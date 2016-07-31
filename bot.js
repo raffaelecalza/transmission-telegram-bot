@@ -45,7 +45,7 @@ bot.onText(/\/start/, function (msg) {
     if (config.bot.users.indexOf(msg.from.id) == -1) return;
     var chatId = msg.chat.id;
     var reply = 'Hi ' + msg.chat.first_name + ' 🙌, I\'m your 🤖\nI\'ve been created to give you all the informations regarding the status of your torrents 😊. Start with /help to get a list of all available commands';
-    bot.sendMessage(chatId, reply);
+    bot.sendMessage(chatId, reply, engine.ListOfCommandsKeyBoard);
 });
 
 // Get the list of all torrents
@@ -116,7 +116,7 @@ bot.onText(/\/torrentremove|❌ Remove/, function (msg) {
     if (engine.torrents.length == 0)
         bot.sendMessage(chatId, engine.NoTorrentText, engine.ListOfCommandsKeyBoard);
     else {
-        bot.sendMessage(chatId, '⚠️ Be careful! Once you remove it, you can not retrieve it ⚠️\nSend me the torrent that you would remove 😊', opts);
+        bot.sendMessage(chatId, '⚠️ Be careful! Once you remove it, you can not retrieve it\nSend me the torrent that you would remove 😊', opts);
         torrentAction = 'remove';
     }
 })
@@ -187,10 +187,24 @@ bot.onText(/[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//
     console.log(msg.text);
     if (torrentAction == 'add')
         engine.AddTorrent(msg.text, (details) => {
-            bot.sendMessage(chatId, 'The torrent was added succesfully, here are some information about it\n' + details);
+            bot.sendMessage(chatId, 'The torrent was added succesfully, here are some information about it\n' + details, engine.ListOfCommandsKeyBoard);
         }, (err) => {
-            bot.sendMessage(chatId, err);
+            bot.sendMessage(chatId, err, engine.ListOfCommandsKeyBoard);
         });
+});
+
+bot.on('document', function (msg) {
+    var chatId = msg.chat.id;
+    var fileId = msg.document.file_id;
+    bot.getFileLink(fileId).then((link) => {
+        engine.AddTorrent(link, (details) => {
+            bot.sendMessage(chatId, 'The torrent was added succesfully, here are some information about it\n' + details, engine.ListOfCommandsKeyBoard);
+        }, (err) => {
+            bot.sendMessage(chatId, err, engine.ListOfCommandsKeyBoard);
+        });
+    }, (err) => {
+        bot.sendMessage(chatId, 'Oops 😰, something seems to have gone wrong while trying to request the link to Telegram servers 😒... Please try again to send the file\nSome details about the error:\n' + JSON.stringify(err));
+    });
 });
 
 // Help instructions
@@ -200,7 +214,7 @@ bot.onText(/\/help|❔ Help/, function (msg) {
 
     var reply = engine.GetCommandsList();
 
-    bot.sendMessage(chatId, reply);
+    bot.sendMessage(chatId, reply, engine.ListOfCommandsKeyBoard);
 });
 
 engine.TorrentCompleted = (msg) => {
