@@ -73,6 +73,7 @@ exports.ErrorMessage = (err) => {
 
 exports.FormatComplete = (torrent) => {
     var msg = 'Oh, a torrent has been downloaded completely 🙌\nHere are some details 😏:\n';
+    msg += '<b>' + torrent.name + '</b>\n';
     msg += 'Size: ' + pretty(torrent.sizeWhenDone) + '\n';
     msg += '📂 ' + torrent.downloadDir + '\n';
     return msg;
