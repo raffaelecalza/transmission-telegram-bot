@@ -66,6 +66,15 @@ exports.GetKeyBoardActive = () => {
     return keyboard;
 }
 
+exports.GetKeyBoardPaused = () => {
+    var keyboard = [];
+    exports.torrents.forEach((torrent) => {
+        if (torrent.status == 0)
+            keyboard.push([torrent.id + ') ' + torrent.name]);
+    });
+    return keyboard;
+}
+
 exports.GetTorrentsList = (success, error) => {
     transmission.get(function (err, arg) {
         if (err)
@@ -162,40 +171,13 @@ exports.HideKeyBoard = {
 exports.NoTorrentText = 'Mmh 😕 it seems that there isn\'t any torrent in the list...\nAdd one by using the /addtorrent command 😉';
 
 /*
- *  Commands list
+ *  Help message
  */
-var commands = [
-    {
-        command: '/torrentlist',
-        description: 'Get the list of all torrents'
-    },
-    {
-        command: '/torrentstatus',
-        description: 'Get all details of a torrent by specify his ID'
-    },
-    {
-        command: '/addtorrent',
-        description: 'Add new torrent from a link'
-    },
-    {
-        command: '/torrentstart',
-        description: 'Put a torrent in download'
-    },
-    {
-        command: '/torrentstop',
-        description: 'Stop a torrent in download'
-    },
-    {
-        command: '/torrentremove',
-        description: '⚠️ Remove the torrent from the list (be careful)'
-    }
-];
 exports.GetCommandsList = () => {
-    var commandsString = '📋 Available commands:\n';
-    commands.forEach(function (command) {
-        commandsString += command.command + ' - ' + command.description + '\n';
-    });
-    return commandsString;
+    var helpMsg = 'If you have a suggestion or discovered a bug please report me <a href="https://github.com/raffaelecalza/transmission-telegram-bot/issues">here</a>\n';
+    helpMsg += 'Creator: Raffaele Calzà - <a href="http://raffaelecalza.tk">raffaelecalza.tk</a>\n';
+    helpMsg += 'If you like the project follow me on <a href="">Twitter</a>'
+    return helpMsg;
 }
 
 // Download the torrent list every minute

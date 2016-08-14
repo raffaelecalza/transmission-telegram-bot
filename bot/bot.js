@@ -96,6 +96,8 @@ bot.onText(/\/torrentstop|⏸ Pause/, function (msg) {
 
     if (engine.torrents.length == 0)
         bot.sendMessage(chatId, engine.NoTorrentText, engine.ListOfCommandsKeyBoard);
+    else if (keyb.length == 0)
+        bot.sendMessage(chatId, "All torrents are currently paused", engine.ListOfCommandsKeyBoard);
     else {
         bot.sendMessage(chatId, 'Which torrent would you stop?', opts);
         torrentAction = 'stop';
@@ -125,7 +127,7 @@ bot.onText(/\/torrentremove|❌ Remove/, function (msg) {
 bot.onText(/\/torrentstart|▶️ Start/, function (msg) {
     if (config.bot.users.indexOf(msg.from.id) == -1) return;
     var chatId = msg.chat.id;
-    var keyb = engine.GetKeyBoard();
+    var keyb = engine.GetKeyBoardPaused();
     var opts = {
         reply_markup: JSON.stringify({
             keyboard: keyb
@@ -134,6 +136,8 @@ bot.onText(/\/torrentstart|▶️ Start/, function (msg) {
 
     if (engine.torrents.length == 0)
         bot.sendMessage(chatId, engine.NoTorrentText, engine.ListOfCommandsKeyBoard);
+    else if (keyb.length == 0)
+        bot.sendMessage(chatId, 'All torrents are in download queue', engine.ListOfCommandsKeyBoard);
     else {
         bot.sendMessage(chatId, 'Please send me a torrent to put in the download queue 😊', opts);
         torrentAction = 'start';
