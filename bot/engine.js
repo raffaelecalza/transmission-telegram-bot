@@ -50,7 +50,7 @@ exports.CheckCompletedTorrents = () => {
 
 // Create a keyboard with all torrent
 exports.GetKeyBoard = () => {
-    var keyboard = [];
+    var keyboard = [['Cancel']];
     exports.torrents.forEach((torrent) => {
         keyboard.push([torrent.id + ') ' + torrent.name]);
     });
@@ -58,7 +58,7 @@ exports.GetKeyBoard = () => {
 }
 
 exports.GetKeyBoardActive = () => {
-    var keyboard = [];
+    var keyboard = [['Cancel']];
     exports.torrents.forEach((torrent) => {
         if (torrent.status > 3)
             keyboard.push([torrent.id + ') ' + torrent.name]);
@@ -67,7 +67,7 @@ exports.GetKeyBoardActive = () => {
 }
 
 exports.GetKeyBoardPaused = () => {
-    var keyboard = [];
+    var keyboard = [['Cancel']];
     exports.torrents.forEach((torrent) => {
         if (torrent.status == 0)
             keyboard.push([torrent.id + ') ' + torrent.name]);

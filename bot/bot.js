@@ -96,7 +96,7 @@ bot.onText(/\/torrentstop|⏸ Pause/, function (msg) {
 
     if (engine.torrents.length == 0)
         bot.sendMessage(chatId, engine.NoTorrentText, engine.ListOfCommandsKeyBoard);
-    else if (keyb.length == 0)
+    else if (keyb.length == 1)
         bot.sendMessage(chatId, "All torrents are currently paused", engine.ListOfCommandsKeyBoard);
     else {
         bot.sendMessage(chatId, 'Which torrent would you stop?', opts);
@@ -136,7 +136,7 @@ bot.onText(/\/torrentstart|▶️ Start/, function (msg) {
 
     if (engine.torrents.length == 0)
         bot.sendMessage(chatId, engine.NoTorrentText, engine.ListOfCommandsKeyBoard);
-    else if (keyb.length == 0)
+    else if (keyb.length == 1)
         bot.sendMessage(chatId, 'All torrents are in download queue', engine.ListOfCommandsKeyBoard);
     else {
         bot.sendMessage(chatId, 'Please send me a torrent to put in the download queue 😊', opts);
@@ -196,6 +196,13 @@ bot.onText(/[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//
             bot.sendMessage(chatId, err, engine.ListOfCommandsKeyBoard);
         });
 });
+
+// Cancel Operation
+bot.onText(/Cancel/, function (msg) {
+    var chatId = msg.chat.id;
+    torrentAction = '';
+    bot.sendMessage(chatId, 'The operation was cancelled', engine.ListOfCommandsKeyBoard);
+})
 
 bot.on('document', function (msg) {
     var chatId = msg.chat.id;
