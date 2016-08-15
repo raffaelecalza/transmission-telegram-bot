@@ -223,7 +223,7 @@ bot.onText(/\/help|❔ Help/, function (msg) {
     if (config.bot.users.indexOf(msg.from.id) == -1) return;
     var chatId = msg.chat.id;
 
-    var reply = engine.GetCommandsList();
+    var reply = engine.GetHelpMsg();
 
     bot.sendMessage(chatId, reply, engine.ListOfCommandsKeyBoard);
 });

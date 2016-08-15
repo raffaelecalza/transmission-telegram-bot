@@ -173,10 +173,13 @@ exports.NoTorrentText = 'Mmh 😕 it seems that there isn\'t any torrent in the 
 /*
  *  Help message
  */
-exports.GetCommandsList = () => {
-    var helpMsg = 'If you have a suggestion or discovered a bug please report me <a href="https://github.com/raffaelecalza/transmission-telegram-bot/issues">here</a>\n';
-    helpMsg += 'Creator: Raffaele Calzà - <a href="http://raffaelecalza.tk">raffaelecalza.tk</a>\n';
-    helpMsg += 'If you like the project follow me on <a href="">Twitter</a>'
+exports.GetHelpMsg = () => {
+    var helpMsg = '<b>Transmission Telegram Bot</b>\n\n';
+    helpMsg += 'Available commands:\n';
+    helpMsg += '• List of torrents\n• Status - Get all details about a torrent\n• Add torrent\n• Start, Pause, Remove a torrent\n\n';
+    helpMsg += 'If you have a suggestion or discovered a bug please report me <a href="https://github.com/raffaelecalza/transmission-telegram-bot/issues">here</a>\n';
+    helpMsg += '<b>Bot version: ' + config.bot.version;
+    helpMsg += '</b>\n\nCreator: Raffaele Calzà - <a href="http://raffaelecalza.tk">github</a>\nFollow me on twitter if you like the project 😉';
     return helpMsg;
 }
 
