@@ -17,10 +17,9 @@ var engine = require('./engine.js');
 var exports = module.exports = {};
 
 exports.TorrentsList = (list) => {
-    var formattedString;
-    var messages = [];
+    var formattedString = '';
     if (list.length > 0) {
-        formattedString = '<strong>List of current torrents and their status:</strong>\n';
+        formattedString += '<strong>List of current torrents and their status:</strong>\n';
 
         list.forEach((torrent) => {
             formattedString += '<b>ID: ' + torrent.id + '</b>\n'
@@ -30,23 +29,17 @@ exports.TorrentsList = (list) => {
             formattedString += '⌛️ ' + exports.GetRemainingTime(torrent.eta) + '\n';
             formattedString += '⬇️ ' + pretty(torrent.rateDownload) + '/s - ';
             formattedString += '⬆️ ' + pretty(torrent.rateUpload) + '/s';
-            messages.push(formattedString);
-            formattedString = '';
+            formattedString += '\n\n';
         });
     }
-    return messages;
+    return formattedString;
 }
 
 exports.TorrentDetails = (torrent) => {
-    console.log(JSON.stringify(torrent));
     var formattedString;
     formattedString = torrent.name + '\n\n';
 
-    var mEpoch = parseInt(torrent.addedDate);
-    // To milliseconds
-    mEpoch *= 1000;
-
-    var addedDate = new Date(mEpoch);
+    var addedDate = FormatTorrentDate(torrent.addedDate);
 
     formattedString += 'Status = <b>' + exports.GetStatusType(torrent.status) + '</b>\n';
     formattedString += '⌛️ ' + exports.GetRemainingTime(torrent.eta) + '\n';
@@ -54,7 +47,7 @@ exports.TorrentDetails = (torrent) => {
     formattedString += '⬇️ ' + pretty(torrent.rateDownload) + '/s - ';
     formattedString += '⬆️ ' + pretty(torrent.rateUpload) + '/s\n\n';
     formattedString += 'Size: ' + pretty(torrent.sizeWhenDone) + '\n';
-    formattedString += '📅 Added: ' + DateTime.format(addedDate, 'DD/MM/YYYY HH:mm:ss') + '\n';
+    formattedString += '📅 Added: ' + DateTime.format(addedDate, 'dddd, DD MMMM HH:mm') + '\n';
     formattedString += '📂 ' + torrent.downloadDir + '\n';
     formattedString += '👥 Peers connected: ' + torrent.peersConnected;
 
@@ -73,10 +66,39 @@ exports.ErrorMessage = (err) => {
 
 exports.FormatComplete = (torrent) => {
     var msg = 'Oh, a torrent has been downloaded completely 🙌\nHere are some details 😏:\n';
-    msg += '<b>' + torrent.name + '</b>\n';
-    msg += 'Size: ' + pretty(torrent.sizeWhenDone) + '\n';
+    msg += '<b>' + torrent.name + '</b>\n\n';
+    var addedDate = FormatTorrentDate(torrent.addedDate);
+    var doneDate = FormatTorrentDate(torrent.doneDate);
+    msg += '📅 ' + DateTime.format(addedDate, 'DD/MM HH:mm') + ' - ' + DateTime.format(doneDate, 'DD/MM HH:mm') + '\n';
+    msg += '🕔 ' + DifferenceToString(DateTime.subtract(doneDate, addedDate).toSeconds()) + '\n';
+    msg += 'Size: ' + pretty(torrent.sizeWhenDone) + '\n\n';
     msg += '📂 ' + torrent.downloadDir + '\n';
     return msg;
+}
+
+function DifferenceToString(seconds) {
+    var string = '';
+    var sec_num = parseInt(seconds, 10);
+    var hours = Math.floor(sec_num / 3600);
+    var minutes = Math.floor((sec_num - (hours * 3600)) / 60);
+    var seconds = sec_num - (hours * 3600) - (minutes * 60);
+
+    if (hours > 0)
+        string += hours + ' hours, ';
+    if (minutes > 0)
+        string += minutes + ' minutes, ';
+    if (seconds > 0)
+        string += seconds + ' seconds';
+    if (string.length == 0)
+        string = 'Time not available';
+    return string;
+}
+
+function FormatTorrentDate(date) {
+    var mEpoch = parseInt(date);
+    // To milliseconds
+    mEpoch *= 1000;
+    return new Date(mEpoch);
 }
 
 /*

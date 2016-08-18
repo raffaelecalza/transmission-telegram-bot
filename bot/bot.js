@@ -53,13 +53,11 @@ bot.onText(/\/torrentlist|List of all torrents/, function (msg) {
     if (config.bot.users.indexOf(msg.from.id) == -1) return;
     var chatId = msg.chat.id;
 
-    engine.GetTorrentsList((messages) => {
-        if (messages.length == 0)
+    engine.GetTorrentsList((msg) => {
+        if (engine.torrents.length == 0)
             bot.sendMessage(chatId, engine.NoTorrentText, engine.ListOfCommandsKeyBoard);
         else
-            messages.forEach((msg) => {
-                bot.sendMessage(chatId, msg, engine.ListOfCommandsKeyBoard);
-            });
+            bot.sendMessage(chatId, msg, engine.ListOfCommandsKeyBoard);
     }, (err) => {
         bot.sendMessage(chatId, err);
     });
