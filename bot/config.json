@@ -1,7 +1,8 @@
 {
     "bot": {
         "token": "bottotoken",
-        "users": []
+        "users": [],
+        "version": "1.0.0"
     },
     "transmission": {
         "address": "ipaddress",
