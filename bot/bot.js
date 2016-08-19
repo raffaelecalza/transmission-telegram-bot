@@ -11,11 +11,10 @@
 */
 
 var TelegramBot = require('node-telegram-bot-api');
-var Dictionary = require('dictionaryjs');
 var engine = require('./engine.js');
 
 var config = require('./config.json');
-var usersActions = new Dictionary();
+var userStates = {};
 
 console.log('Initializing the bot...')
 var bot = new TelegramBot(config.bot.token, {
@@ -25,11 +24,6 @@ var bot = new TelegramBot(config.bot.token, {
 console.log('Yeah! All is configured... Here are your bot information:');
 bot.getMe().then(function (info) {
     console.log('Bot username: ' + info.username);
-});
-
-// Populate the actions dictionary with keys
-config.bot.users.forEach((user) => {
-    usersActions.set(user, '');
 });
 
 // End of configuration
@@ -81,7 +75,7 @@ bot.onText(/\/torrentstatus|Status/, function (msg) {
         bot.sendMessage(chatId, engine.NoTorrentText, engine.ListOfCommandsKeyBoard);
     else {
         bot.sendMessage(chatId, 'Select a torrent and you\'ll receive all information about it', opts);
-        usersActions.set(chatId, 'details');
+        userStates[chatId] = 'details';
     }
 });
 
@@ -102,7 +96,7 @@ bot.onText(/\/torrentstart|▶️ Start/, function (msg) {
         bot.sendMessage(chatId, 'All torrents are in download queue', engine.ListOfCommandsKeyBoard);
     else {
         bot.sendMessage(chatId, 'Please send me a torrent to put in the download queue 😊', opts);
-        usersActions.set(chatId, 'start');
+        userStates[chatId] = 'start';
     }
 });
 
@@ -123,7 +117,7 @@ bot.onText(/\/torrentstop|⏸ Pause/, function (msg) {
         bot.sendMessage(chatId, "All torrents are currently paused", engine.ListOfCommandsKeyBoard);
     else {
         bot.sendMessage(chatId, 'Which torrent would you stop?', opts);
-        usersActions.set(chatId, 'stop');
+        userStates[chatId] = 'stop';
     }
 });
 
@@ -142,14 +136,14 @@ bot.onText(/\/torrentremove|❌ Remove/, function (msg) {
         bot.sendMessage(chatId, engine.NoTorrentText, engine.ListOfCommandsKeyBoard);
     else {
         bot.sendMessage(chatId, '⚠️ Be careful! Once you remove it, you can not retrieve it\nSend me the torrent that you would remove 😊', opts);
-        usersActions.set(chatId, 'remove');
+        userStates[chatId] = 'remove';
     }
 })
 
 bot.onText(/Yes|No/, function (msg) {
     var chatId = msg.chat.id;
 
-    var torrentId = usersActions.get(chatId);
+    var torrentId = userStates[chatId] || '';
     var answer = msg.text;
 
     if (answer == 'yes')
@@ -168,7 +162,7 @@ bot.onText(/\d+\) .+/, function (msg) {
 
     var torrentId = msg.text.match(/\d+/)[0];
 
-    var torrentAction = usersActions.get(chatId);
+    var torrentAction = userStates[chatId] || '';
 
     if (torrentAction == 'stop')
         engine.StopTorrent(torrentId, (details) => {
@@ -189,7 +183,7 @@ bot.onText(/\d+\) .+/, function (msg) {
             bot.sendMessage(chatId, err, engine.ListOfCommandsKeyBoard);
         });
     else if (torrentAction == 'remove') {
-        usersActions.set(chatId, torrentId);
+        userStates[chatId] = torrentId;
         bot.sendMessage(chatId, 'Are you sure you want to remove this torrent?', {
             reply_markup: JSON.stringify({
                 keyboard: [['Yes', 'No']]
@@ -204,13 +198,13 @@ bot.onText(/\/addtorrent|Add torrent/, function (msg) {
     var chatId = msg.chat.id;
 
     bot.sendMessage(chatId, 'Please send me a torrent url or send me a torrent file (e.g. file.torrent)', engine.HideKeyBoard);
-    usersActions.set(chatId, 'add');
+    userStates[chatId] = 'add';
 });
 
 bot.onText(/[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/, function (msg) {
     var chatId = msg.chat.id;
 
-    var torrentAction = usersActions.get(chatId);
+    var torrentAction = userStates[chatId] || '';
     if (torrentAction == 'add')
         engine.AddTorrent(msg.text, (details) => {
             bot.sendMessage(chatId, 'The torrent was added succesfully, here are some information about it\n' + details, engine.ListOfCommandsKeyBoard);
@@ -222,7 +216,7 @@ bot.onText(/[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//
 // Cancel Operation
 bot.onText(/Cancel/, function (msg) {
     var chatId = msg.chat.id;
-    usersActions.set(chatId, '');
+    userStates[chatId] = '';
     bot.sendMessage(chatId, 'The operation was cancelled', engine.ListOfCommandsKeyBoard);
 })
 
