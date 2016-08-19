@@ -154,7 +154,7 @@ exports.ListOfCommandsKeyBoard = {
             ['List of all torrents'],
             ['Status', 'Add torrent'],
             ['▶️ Start', '⏸ Pause', '❌ Remove'],
-            ['❔ Help']
+            ['⚙ Settings', '❔ Help']
         ]
     }),
     parse_mode: 'html',

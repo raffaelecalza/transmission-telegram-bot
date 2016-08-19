@@ -240,6 +240,13 @@ bot.on('document', function (msg) {
     });
 });
 
+// Settings command
+bot.onText(/⚙ Settings/, function (msg) {
+    var chatId = msg.chat.id;
+
+    bot.sendMessage(chatId, '🔜 In coming... 🚀', engine.ListOfCommandsKeyBoard);
+})
+
 // Help instructions
 bot.onText(/\/help|❔ Help/, function (msg) {
     if (config.bot.users.indexOf(msg.from.id) == -1) return;
