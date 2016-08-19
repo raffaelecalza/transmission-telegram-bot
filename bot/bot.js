@@ -146,6 +146,22 @@ bot.onText(/\/torrentremove|❌ Remove/, function (msg) {
     }
 })
 
+bot.onText(/Yes|No/, function (msg) {
+    var chatId = msg.chat.id;
+
+    var torrentId = usersActions.get(chatId);
+    var answer = msg.text;
+
+    if (answer == 'yes')
+        engine.RemoveTorrent(torrentId, (details) => {
+            bot.sendMessage(chatId, 'Torrent correctly removed\nUse /torrentstatus to see the updated torrents list', engine.ListOfCommandsKeyBoard);
+        }, (err) => {
+            bot.sendMessage(chatId, err, engine.ListOfCommandsKeyBoard);
+        });
+    else
+        bot.sendMessage(chatId, 'The operation was canceled, narrow escape 😪', engine.ListOfCommandsKeyBoard);
+})
+
 bot.onText(/\d+\) .+/, function (msg) {
     if (config.bot.users.indexOf(msg.from.id) == -1) return;
     var chatId = msg.chat.id;
@@ -172,12 +188,14 @@ bot.onText(/\d+\) .+/, function (msg) {
         }, (err) => {
             bot.sendMessage(chatId, err, engine.ListOfCommandsKeyBoard);
         });
-    else if (torrentAction == 'remove')
-        engine.RemoveTorrent(torrentId, (details) => {
-            bot.sendMessage(chatId, 'Torrent correctly removed\nUse /torrentstatus to see the updated torrents list', engine.ListOfCommandsKeyBoard);
-        }, (err) => {
-            bot.sendMessage(chatId, err, engine.ListOfCommandsKeyBoard);
+    else if (torrentAction == 'remove') {
+        usersActions.set(chatId, torrentId);
+        bot.sendMessage(chatId, 'Are you sure you want to remove this torrent?', {
+            reply_markup: JSON.stringify({
+                keyboard: [['Yes', 'No']]
+            })
         });
+    }
 });
 
 // Add a torrent from url
