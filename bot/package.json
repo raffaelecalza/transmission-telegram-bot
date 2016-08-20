@@ -18,6 +18,7 @@
   "homepage": "https://github.com/raffaelecalza/transmission-telegram-bot#readme",
   "dependencies": {
     "date-and-time": "^0.3.0",
+    "handlebars": "^4.0.5",
     "node-telegram-bot-api": "^0.23.3",
     "prettysize": "0.0.3",
     "transmission": "^0.4.5"
