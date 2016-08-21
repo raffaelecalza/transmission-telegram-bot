@@ -163,7 +163,7 @@ exports.ListOfCommandsKeyBoard = {
 
 exports.HideKeyBoard = {
     reply_markup: JSON.stringify({
-        hide_keyboard: true
+        keyboard: [['Cancel']]
     })
 }
 
