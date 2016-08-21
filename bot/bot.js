@@ -207,7 +207,7 @@ bot.onText(/[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//
     var torrentAction = userStates[chatId] || '';
     if (torrentAction == 'add')
         engine.AddTorrent(msg.text, (details) => {
-            bot.sendMessage(chatId, 'The torrent was added succesfully, here are some information about it\n' + details, engine.ListOfCommandsKeyBoard);
+            bot.sendMessage(chatId, details, engine.ListOfCommandsKeyBoard);
         }, (err) => {
             bot.sendMessage(chatId, err, engine.ListOfCommandsKeyBoard);
         });

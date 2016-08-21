@@ -13,7 +13,7 @@ var Transmission = require('transmission');
 var formatter = require('./formatter.js');
 var config = require('./config.json');
 
-console.log('Trying to contact transmission session');
+console.log('Configuring transmission session');
 var transmission = new Transmission({
     port: config.transmission.port,
     host: config.transmission.address,
