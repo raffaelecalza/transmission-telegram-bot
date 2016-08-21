@@ -145,8 +145,8 @@ bot.onText(/Yes|No/, function (msg) {
 
     var torrentId = userStates[chatId] || '';
     var answer = msg.text;
-
-    if (answer == 'yes')
+    
+    if (answer == 'Yes')
         engine.RemoveTorrent(torrentId, (details) => {
             bot.sendMessage(chatId, 'Torrent correctly removed\nUse /torrentstatus to see the updated torrents list', engine.ListOfCommandsKeyBoard);
         }, (err) => {
