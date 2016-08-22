@@ -20,21 +20,21 @@ var exports = module.exports = {};
 // Handlebars helper
 Handlebars.registerHelper('getStatusType', (type) => {
     if (type === 0) {
-        return 'STOPPED';
+        return 'Stopped';
     } else if (type === 1) {
-        return 'CHECK_WAIT';
+        return 'Check wait';
     } else if (type === 2) {
-        return 'CHECK';
+        return 'Check';
     } else if (type === 3) {
-        return 'DOWNLOAD_WAIT';
+        return 'Download wait';
     } else if (type === 4) {
-        return 'DOWNLOAD';
+        return 'Download';
     } else if (type === 5) {
-        return 'SEED_WAIT';
+        return 'Seed wait';
     } else if (type === 6) {
-        return 'SEED';
+        return 'Seed';
     } else if (type === 7) {
-        return 'ISOLATED';
+        return 'Isolated';
     }
 })
 Handlebars.registerHelper('torrentPercentage', (percent) => {

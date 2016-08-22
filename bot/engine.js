@@ -1,3 +1,4 @@
+'use strict'
 /*
   _______                            _         _               ____        _   
  |__   __|                          (_)       (_)             |  _ \      | |  
@@ -9,29 +10,34 @@
     © 2016 - Calzà Raffaele (raffaelecalza4@gmail.com)
     Github repository: https://github.com/raffaelecalza/transmission-telegram-bot
 */
-var Transmission = require('transmission');
-var formatter = require('./formatter.js');
-var config = require('./config.json');
+const Transmission = require('transmission');
+const formatter = require('./formatter.js');
+const config = require('./config.json');
 
 console.log('Configuring transmission session');
-var transmission = new Transmission({
+const transmission = new Transmission({
     port: config.transmission.port,
     host: config.transmission.address,
     username: config.transmission.username,
     password: config.transmission.password
 });
+console.log(`-------- Session configured --------
+IP address and port --> ${config.transmission.address}:${config.transmission.port}
+Username: ${config.transmission.username|| 'none'}
+Password: ${config.transmission.password || 'none'}
+`);
 
 var exports = module.exports = {};
 var oldList = exports.torrents = [];
 
 exports.UpdateTorrentList = () => {
     transmission.get(function (err, arg) {
-        if (err) {
+        if (err)
             console.error(err);
-        } else {
+        else {
             oldList = exports.torrents;
             exports.torrents = arg.torrents;
-            console.log("Downloaded the new list of torrents");
+            console.log('Downloaded the new list of torrents');
 
             exports.CheckCompletedTorrents();
         }
@@ -39,7 +45,7 @@ exports.UpdateTorrentList = () => {
 }
 
 exports.CheckCompletedTorrents = () => {
-    oldList.forEach((torrent) => {
+    oldList.forEach(torrent => {
         // Search the torrent in the new list
         for (var i = 0; i < exports.torrents.length; i++) {
             if (torrent.name === exports.torrents[i].name && torrent.status != exports.torrents[i].status && exports.torrents[i].status === 6)
@@ -51,26 +57,26 @@ exports.CheckCompletedTorrents = () => {
 // Create a keyboard with all torrent
 exports.GetKeyBoard = () => {
     var keyboard = [['Cancel']];
-    exports.torrents.forEach((torrent) => {
-        keyboard.push([torrent.id + ') ' + torrent.name]);
+    exports.torrents.forEach(torrent => {
+        keyboard.push([`${torrent.id}) ${torrent.name}`]);
     });
     return keyboard;
 }
 
 exports.GetKeyBoardActive = () => {
     var keyboard = [['Cancel']];
-    exports.torrents.forEach((torrent) => {
+    exports.torrents.forEach(torrent => {
         if (torrent.status > 3)
-            keyboard.push([torrent.id + ') ' + torrent.name]);
+            keyboard.push([`${torrent.id}) ${torrent.name}`]);
     });
     return keyboard;
 }
 
 exports.GetKeyBoardPaused = () => {
     var keyboard = [['Cancel']];
-    exports.torrents.forEach((torrent) => {
+    exports.torrents.forEach(torrent => {
         if (torrent.status == 0)
-            keyboard.push([torrent.id + ') ' + torrent.name]);
+            keyboard.push([`${torrent.id}) ${torrent.name}`]);
     });
     return keyboard;
 }
@@ -174,12 +180,18 @@ exports.NoTorrentText = 'Mmh 😕 it seems that there isn\'t any torrent in the 
  *  Help message
  */
 exports.GetHelpMsg = () => {
-    var helpMsg = '<b>Transmission Telegram Bot</b>\n\n';
-    helpMsg += 'Available commands:\n';
-    helpMsg += '• List of torrents\n• Status - Get all details about a torrent\n• Add torrent\n• Start, Pause, Remove a torrent\n\n';
-    helpMsg += 'If you have a suggestion or discovered a bug please report me <a href="https://github.com/raffaelecalza/transmission-telegram-bot/issues">here</a>\n';
-    helpMsg += '<b>Bot version: ' + config.bot.version;
-    helpMsg += '</b>\n\nCreator: Raffaele Calzà - <a href="http://raffaelecalza.tk">github</a>\nFollow me on twitter if you like the project 😉';
+    var helpMsg = `<b>Transmission Telegram Bot</b>
+Available commands:
+• List of torrents
+• Status - Get all details about a torrent
+• Add torrent
+• Start, Pause, Remove a torrent
+
+If you have a suggestion or discovered a bug please report me 👉 <a href="https://github.com/raffaelecalza/transmission-telegram-bot/issues">here</a>
+<b>🤖 Bot version: ${config.bot.version}</b>
+
+Creator: Raffaele Calzà - <a href="http://raffaelecalza.tk">github</a>
+Follow me on twitter if you like the project 😉`
     return helpMsg;
 }
 

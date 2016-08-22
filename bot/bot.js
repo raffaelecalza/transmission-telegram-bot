@@ -1,3 +1,4 @@
+'use strict'
 /*
   _______                            _         _               ____        _   
  |__   __|                          (_)       (_)             |  _ \      | |  
@@ -10,32 +11,38 @@
     Github repository: https://github.com/raffaelecalza/transmission-telegram-bot
 */
 
-var TelegramBot = require('node-telegram-bot-api');
-var engine = require('./engine.js');
+const TelegramBot = require('node-telegram-bot-api');
+const DateTime = require('date-and-time');
+const engine = require('./engine.js');
 
-var config = require('./config.json');
+const config = require('./config.json');
 var userStates = {};
 
 console.log('Initializing the bot...')
-var bot = new TelegramBot(config.bot.token, {
+const bot = new TelegramBot(config.bot.token, {
     polling: true
 });
 
-console.log('Yeah! All is configured... Here are your bot information:');
 bot.getMe().then(function (info) {
-    console.log('Bot username: ' + info.username);
+    console.log(`
+${info.first_name} is ready, the username is @${info.username}
+`);
 });
 
 // End of configuration
 
 // Display every message in the console
 bot.on('message', function (msg) {
-    console.log('\n\n');
-    console.log('Oh.. there\'s a new incoming message sir!');
-    console.log('Here are some details:');
-    console.log('From user: ' + msg.chat.username + '(' + msg.from.id + ')');
-    console.log('Message id: ' + msg.message_id);
-    console.log('Message text: ' + msg.text);
+    console.log(`
+Oh... there's a new incoming message sir!
+-------- Here are some details --------
+Authorized user: ${config.bot.users.indexOf(msg.from.id) > -1 ? 'yes' : 'no'}
+Date: ${DateTime.format(new Date(msg.date * 1000), 'DD/MM HH:mm')}
+From user: ${msg.chat.username || 'no username provided'}
+Name and surname: ${msg.from.first_name} ${msg.from.last_name}
+Message id: ${msg.message_id}
+Message text: ${msg.text || 'no text'}
+`);
 });
 
 // Start message
@@ -235,7 +242,7 @@ bot.on('document', function (msg) {
 });
 
 // Settings command
-bot.onText(/⚙ Settings/, function (msg) {
+bot.onText(/\/settings|⚙ Settings/, function (msg) {
     var chatId = msg.chat.id;
 
     bot.sendMessage(chatId, '🔜 In coming... 🚀', engine.ListOfCommandsKeyBoard);
