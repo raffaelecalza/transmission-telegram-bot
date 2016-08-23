@@ -45,6 +45,16 @@ Message text: ${msg.text || 'no text'}
 `);
 });
 
+console.log('-------- Notify autorizhed users that the bot is up --------');
+config.bot.users.forEach(user => {
+    var msg = `Hey, I woke up just now 😎 and I'm ready to respond to your commands 🙌
+
+👉 If you need help, use the /help command
+
+Anyway when a torrent finishes the download, I'll send you a notification 🔔`;
+    bot.sendMessage(user, msg, engine.ListOfCommandsKeyBoard);
+})
+
 // Start message
 bot.onText(/\/start/, function (msg) {
     if (config.bot.users.indexOf(msg.from.id) == -1) return;
