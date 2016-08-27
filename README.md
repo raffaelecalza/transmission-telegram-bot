@@ -4,9 +4,8 @@
   <br>
   Transmission Bot for Telegram
   <br>
-  <p align="center">Do you like the project? <a href="http://paypal.me/RaffaeleCalza/3">Buy me a coffee or a beer</a></p>
-  <br>
 </h1>
+<p align="center">Do you like the project? <a href="http://paypal.me/RaffaeleCalza/3">Buy me a coffee or a beer</a></p>
 So, you want to controll your torrent status from anywhere in the world, but you don't know how to do this, right? Here is the solution, this is a simple telegram bot that allows you to check the status of your torrents, add, stop, remove, briefly these are all the basic actions that you do with the program or web interface.
 
 #### Summary:
