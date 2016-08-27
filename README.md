@@ -9,10 +9,10 @@
 So, you want to controll your torrent status from anywhere in the world, but you don't know how to do this, right? Here is the solution, this is a simple telegram bot that allows you to check the status of your torrents, add, stop, remove, briefly these are all the basic actions that you do with the program or web interface.
 
 #### Summary:
-* [List of available commands](Available commands)
-* [How to install it](How to install it)
-* [Note](NOTE)
-* [Bugs, support and suggestion](Report bugs or suggestion)
+* [List of available commands](#available-commands)
+* [How to install it](#how-to-install-it)
+* [Note](#note)
+* [Bugs, support and suggestions](#report-bugs-or-suggestions)
 
 ## Available commands
 * <b>List of all torrents</b>;
@@ -38,7 +38,7 @@ After you have register your bot and take the token you have to send to BotFathe
 <code>torrentremove - Remove a torrent</code><br />
 <code>help - Get the list of available commands</code><br />
 ### 3) Install NodeJS, NPM and PM2
-Go to the [next step](4\) Configure your bot) if you have already installed NodeJS, NPM and PM2.
+Go to the [next step](#4-configure-your-bot) if you have already installed NodeJS, NPM and PM2.
 #### Install NodeJS and NPM
 For Windows and OSX go to NodeJS site and download the installer (https://nodejs.org/en/download/). This also will install NPM.
 
@@ -71,5 +71,5 @@ If you don't know your chat id, open a terminal and go to your bot's folder, the
 Now you haven't to wait anymore, go to your bot folder and type <code>pm2 start bot.js</code>. Then your bot will start in background.
 ## NOTE
 If you shutdown or reboot your PC, PM2 will stop your application so you have to re-run your bot every time with the command <code>pm2 start bot.js</code>.
-## Report bugs or suggestion
+## Report bugs or suggestions
 If you have discovered a bug or if you have a suggestion, please open an issue or send me an email (raffaelecalza4@gmail.com)
