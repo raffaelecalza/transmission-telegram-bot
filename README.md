@@ -25,18 +25,23 @@ So, you want to controll your torrent status from anywhere in the world, but you
 ## How to install it
 Clone the repository with <code>git clone https://github.com/raffaelecalza/transmission-telegram-bot.git</code> or download it as a zip file.
 ### 1) Register your bot name
-First of all you have to register your bot's name. To do this, begin a new chat to <b>@BotFather</b>. Send <code>/newbot</code> command. Then send  to him the name of your bot (e.g. My Wonderful Bot). Then send a username for the bot (NOTE: this must end with the word 'bot'), e.g. MyWonderfulBot. After that the Bot Father will send you a message that contains the TOKEN for the bot. Save it because in the fourth step we'll use it.
+First of all you have to register your bot's name. To do this, begin a new chat to <b>@BotFather</b>. Send <code>/newbot</code> command. Then send  to him the name of your bot (e.g. My Wonderful Bot). Then send a username for the bot (NOTE: this must end with the word 'bot'), e.g. MyWonderfulBot. After that the Bot Father will send you a message that contains the TOKEN for the bot. Save it because in the fourth step we'll use it.<br />
+<img src="https://github.com/raffaelecalza/transmission-telegram-bot/blob/master/screenshot/1.jpg?raw=true" width="33%" /> <img src="https://github.com/raffaelecalza/transmission-telegram-bot/blob/master/screenshot/2.jpg?raw=true" width="33%" /> <img src="https://github.com/raffaelecalza/transmission-telegram-bot/blob/master/screenshot/3.jpg?raw=true" width="33%" />
 
 ### 2) Set bot commands (Optional)
 This step is optional because the bot has a custom keyboard, but I suggest you to set the commands.
 After you have register your bot and take the token you have to send to BotFather the full list of commands. Use the <code>/setcommands</code> and send this string to BotFather:<br />
-<code>torrentlist - Get the list of all torrents</code><br />
-<code>torrentstatus - Get all details about a torrent</code><br />
-<code>torrentadd - Add a torrent from url</code><br />
-<code>torrentstart - Start a paused torrent</code><br />
-<code>torrentstop - Stop a torrent</code><br />
-<code>torrentremove - Remove a torrent</code><br />
-<code>help - Get the list of available commands</code><br />
+```
+torrentlist - Get the list of all torrents
+torrentstatus - Get all details about a torrent
+torrentadd - Add a torrent from url
+torrentstart - Start a paused torrent
+torrentstop - Stop a torrent
+torrentremove - Remove a torrent
+settings - Set your preferences
+help - Get the list of available commands
+```
+<h4 align="center"><img src="https://github.com/raffaelecalza/transmission-telegram-bot/blob/master/screenshot/4.jpg?raw=true" width="33%" /></h4>
 ### 3) Install NodeJS, NPM and PM2
 Go to the [next step](#4-configure-your-bot) if you have already installed NodeJS, NPM and PM2.
 #### Install NodeJS and NPM
