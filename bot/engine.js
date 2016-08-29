@@ -183,15 +183,16 @@ exports.GetHelpMsg = () => {
     var helpMsg = `<b>Transmission Telegram Bot</b>
 Available commands:
 • List of torrents
-• Status - Get all details about a torrent
+• Torrent status
 • Add torrent
-• Start, Pause, Remove a torrent
+• Start, Pause, Remove torrent
+• Settings
 
 If you have a suggestion or discovered a bug please report me 👉 <a href="https://github.com/raffaelecalza/transmission-telegram-bot/issues">here</a>
 <b>🤖 Bot version: ${config.bot.version}</b>
 
-Creator: Raffaele Calzà - <a href="http://raffaelecalza.tk">github</a>
-Follow me on twitter if you like the project 😉`
+Creator: <a href="http://raffaelecalza.tk">Raffaele Calzà</a>, buy me a coffee or a beer 🍻 click <a href="http://bit.ly/transmission-bot">here</a>
+Follow me on the socials if you like the project, thanks 😎👍`
     return helpMsg;
 }
 
