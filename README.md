@@ -55,7 +55,6 @@ For running your bot forever and as a daemon, you have to install a simple libra
 ### 4) Configure your bot
 Now, open the config.json file with a text editor. Replace the token string with your bot's token. If you already know your chats id insert it in the array.
 In the transmission section, insert the ip address of the computer where transmission is installed (localhost if the bot runs in the same machine). Insert your username and password if you've set it, otherwise leave this fileds empty (don't delete them). The last step is to specify the number of the port (if you have changed it).
-If you don't know your chat id, open a terminal and go to your bot's folder, then start your bot (after have installed all packages in the 4 step) with the command <code>node bot.js</code>. Try to send a message to your bot, you'll see in the console your chat id, hit <code>Ctrl + C</code> to stop the bot and insert your chat id in the config file.
 ```javascript
 {
   "bot": {
@@ -72,6 +71,9 @@ If you don't know your chat id, open a terminal and go to your bot's folder, the
   }
 }
 ```
+If you don't know your chat id, open a terminal and go to your bot repo's folder, open the <code>bot/</code> folder then start your bot (after have installed all packages in the 3 step) with the command <code>node bot.js</code>. Try to send a message to your bot, you'll see in the console your chat id, hit <code>Ctrl + C</code> to stop the bot and insert your chat id in the config file.<br />
+**NOTE: you must have inserted at least the bot token in the config file but i recommend you to configure also Transmission before running your bot.**
+<h4 align="center"><img src="https://github.com/raffaelecalza/transmission-telegram-bot/blob/master/screenshot/5.gif?raw=true" /></h4>
 ### 5) Run your bot
 Now you haven't to wait anymore, go to your bot folder and type <code>pm2 start bot.js</code>. Then your bot will start in background.
 ## NOTE
