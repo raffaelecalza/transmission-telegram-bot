@@ -39,6 +39,7 @@ Oh... there's a new incoming message sir!
 Authorized user: ${config.bot.users.indexOf(msg.from.id) > -1 ? 'yes' : 'no'}
 Date: ${DateTime.format(new Date(msg.date * 1000), 'DD/MM HH:mm')}
 From user: ${msg.chat.username || 'no username provided'}
+Chat ID: ${msg.chat.id}
 Name and surname: ${msg.from.first_name} ${msg.from.last_name}
 Message id: ${msg.message_id}
 Message text: ${msg.text || 'no text'}
