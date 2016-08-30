@@ -15,27 +15,22 @@ const DateTime = require('date-and-time');
 const Handlebars = require('handlebars');
 const pretty = require('prettysize');
 
+const torrentStatus = {
+    0: 'Stopped',
+    1: 'Check wait',
+    2: 'Check',
+    3: 'Download wait',
+    4: 'Download',
+    5: 'Seed wait',
+    6: 'Seed',
+    7: 'Isolated'
+}
+
 var exports = module.exports = {};
 
 // Handlebars helper
 Handlebars.registerHelper('getStatusType', (type) => {
-    if (type === 0) {
-        return 'Stopped';
-    } else if (type === 1) {
-        return 'Check wait';
-    } else if (type === 2) {
-        return 'Check';
-    } else if (type === 3) {
-        return 'Download wait';
-    } else if (type === 4) {
-        return 'Download';
-    } else if (type === 5) {
-        return 'Seed wait';
-    } else if (type === 6) {
-        return 'Seed';
-    } else if (type === 7) {
-        return 'Isolated';
-    }
+    return torrentStatus[type];
 })
 Handlebars.registerHelper('torrentPercentage', (percent) => {
     return (percent * 100).toFixed(2) + '%';
