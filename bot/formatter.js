@@ -107,7 +107,7 @@ let torrentsListTemplate = `<strong>List of current torrents and their status:</
 
 {{/each}}`;
 
-exports.TorrentsList = Handlebars.compile(torrentsListTemplate, {noEscape: true});
+exports.torrentsList = Handlebars.compile(torrentsListTemplate, {noEscape: true});
 
 /* Torrent details template */
 let torrentDetailsTemplate = `{{name}}
@@ -123,21 +123,21 @@ Size: {{speed sizeWhenDone}}
 👥 Peers connected: {{peersConnected}}
 `;
 
-exports.TorrentDetails = Handlebars.compile(torrentDetailsTemplate, {noEscape: true});
+exports.torrentDetails = Handlebars.compile(torrentDetailsTemplate, {noEscape: true});
 
 /* New torrent added template */
 let newTorrentTemplate = `The torrent was added succesfully 👌, here are some information about it:
 • <strong>ID torrent:</strong> {{id}};
 • <strong>Name:</strong> {{name}}
 `;
-exports.NewTorrent = Handlebars.compile(newTorrentTemplate, {noEscape: true});
+exports.newTorrent = Handlebars.compile(newTorrentTemplate, {noEscape: true});
 
-exports.ErrorMessage = (err) => {
+exports.errorMessage = (err) => {
     return 'Ops there was an error 😰, here are some details:\n' + err;
 }
 
 /* Complete torrent template */
-let completeTorrentTemplate = `Oh, a torrent has been downloaded completely 🙌\nHere are some details 😏:
+let completeTorrentTemplate = `Oh, a torrent has been downloaded completely 🙌\nHere are some details 👇:
 <strong>{{name}}</strong>
 
 📅 {{formatDate (parseDate addedDate) 'DD/MM HH:mm'}} - {{formatDate (parseDate doneDate) 'DD/MM HH:mm'}}
@@ -147,4 +147,4 @@ Size: {{speed sizeWhenDone}}
 📂 {{downloadDir}}
 Debug: doneDate = {{doneDate}}
 `;
-exports.FormatComplete = Handlebars.compile(completeTorrentTemplate, {noEscape: true});
+exports.formatComplete = Handlebars.compile(completeTorrentTemplate, {noEscape: true});

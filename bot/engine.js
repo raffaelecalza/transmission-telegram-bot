@@ -30,7 +30,7 @@ Password: ${config.transmission.password || 'none'}
 var exports = module.exports = {};
 var oldList = exports.torrents = [];
 
-exports.UpdateTorrentList = () => {
+exports.updateTorrentList = () => {
     transmission.get(function (err, arg) {
         if (err)
             console.error(err);
@@ -39,23 +39,23 @@ exports.UpdateTorrentList = () => {
             exports.torrents = arg.torrents;
             console.log('Downloaded the new list of torrents');
 
-            exports.CheckCompletedTorrents();
+            exports.checkCompletedTorrents();
         }
     });
 }
 
-exports.CheckCompletedTorrents = () => {
+exports.checkCompletedTorrents = () => {
     oldList.forEach(torrent => {
         // Search the torrent in the new list
         for (var i = 0; i < exports.torrents.length; i++) {
             if (torrent.name === exports.torrents[i].name && torrent.status != exports.torrents[i].status && exports.torrents[i].status === 6)
-                exports.TorrentCompleted(formatter.FormatComplete(torrent));
+                exports.torrentCompleted(formatter.formatComplete(torrent));
         }
     });
 }
 
 // Create a keyboard with all torrent
-exports.GetKeyBoard = () => {
+exports.getKeyboard = () => {
     var keyboard = [['Cancel']];
     exports.torrents.forEach(torrent => {
         keyboard.push([`${torrent.id}) ${torrent.name}`]);
@@ -63,7 +63,7 @@ exports.GetKeyBoard = () => {
     return keyboard;
 }
 
-exports.GetKeyBoardActive = () => {
+exports.getKeyboardActive = () => {
     var keyboard = [['Cancel']];
     exports.torrents.forEach(torrent => {
         if (torrent.status > 3)
@@ -72,7 +72,7 @@ exports.GetKeyBoardActive = () => {
     return keyboard;
 }
 
-exports.GetKeyBoardPaused = () => {
+exports.getKeyboardPaused = () => {
     var keyboard = [['Cancel']];
     exports.torrents.forEach(torrent => {
         if (torrent.status == 0)
@@ -81,80 +81,80 @@ exports.GetKeyBoardPaused = () => {
     return keyboard;
 }
 
-exports.GetTorrentsList = (success, error) => {
+exports.getTorrentsList = (success, error) => {
     transmission.get(function (err, arg) {
         if (err)
-            error(formatter.ErrorMessage(err));
+            error(formatter.errorMessage(err));
         else {
             exports.torrents = arg.torrents;
-            success(formatter.TorrentsList(arg.torrents));
+            success(formatter.torrentsList(arg.torrents));
         }
     });
 }
 
-exports.GetTorrentDetails = (id, success, error) => {
+exports.getTorrentDetails = (id, success, error) => {
     transmission.get(parseInt(id), function (err, result) {
         if (err) {
-            error(formatter.ErrorMessage(err));
+            error(formatter.errorMessage(err));
             return;
         }
         if (result.torrents.length > 0)
-            success(formatter.TorrentDetails(result.torrents[0]));
+            success(formatter.torrentDetails(result.torrents[0]));
     });
 }
 
 // Add a torrent from url
-exports.AddTorrent = (url, success, error) => {
+exports.addTorrent = (url, success, error) => {
     transmission.addUrl(url, function (err, result) {
         if (err) {
-            error(formatter.ErrorMessage(err));
+            error(formatter.errorMessage(err));
             return;
         }
 
         // Update torrent list
-        exports.UpdateTorrentList();
-        success(formatter.NewTorrent(result));
+        exports.updateTorrentList();
+        success(formatter.newTorrent(result));
     });
 }
 
-exports.StopTorrent = (id, success, error) => {
+exports.pauseTorrent = (id, success, error) => {
     transmission.stop(parseInt(id), function (err, result) {
         if (err)
-            error(formatter.ErrorMessage(err));
+            error(formatter.errorMessage(err));
         else {
             // Update torrent list
-            exports.UpdateTorrentList();
+            exports.updateTorrentList();
             success(result);
         }
     });
 }
 
-exports.StartTorrent = (id, success, error) => {
+exports.startTorrent = (id, success, error) => {
     transmission.start(parseInt(id), function (err, result) {
         if (err)
-            error(formatter.ErrorMessage(err));
+            error(formatter.errorMessage(err));
         else {
             // Update torrent list
-            exports.UpdateTorrentList();
+            exports.updateTorrentList();
             success(result);
         }
     });
 }
 
-exports.RemoveTorrent = (id, success, error) => {
+exports.removeTorrent = (id, success, error) => {
     transmission.remove(parseInt(id), function (err, result) {
         if (err)
-            error(formatter.ErrorMessage(err));
+            error(formatter.errorMessage(err));
         else {
             // Update torrent list
-            exports.UpdateTorrentList();
+            exports.updateTorrentList();
             success(result);
         }
     });
 }
 
 // Hide keyboard for bot
-exports.ListOfCommandsKeyBoard = {
+exports.listOfCommandsKeyboard = {
     reply_markup: JSON.stringify({
         keyboard: [
             ['List of all torrents'],
@@ -167,20 +167,19 @@ exports.ListOfCommandsKeyBoard = {
     disable_web_page_preview: true
 }
 
-exports.HideKeyBoard = {
+exports.hideKeyboard = {
     reply_markup: JSON.stringify({
         keyboard: [['Cancel']]
     })
 }
 
 // String to send when the list of torrents is empty
-exports.NoTorrentText = 'Mmh 😕 it seems that there isn\'t any torrent in the list...\nAdd one by using the /addtorrent command 😉';
+exports.noTorrentsText = 'Mmh 😕 it seems that there isn\'t any torrent in the list...\nAdd one by using the /addtorrent command 😉';
 
 /*
  *  Help message
  */
-exports.GetHelpMsg = () => {
-    var helpMsg = `<b>Transmission Telegram Bot</b>
+exports.helpMsg = `<b>Transmission Telegram Bot</b>
 Available commands:
 • List of torrents
 • Torrent status
@@ -192,11 +191,9 @@ If you have a suggestion or discovered a bug please report me 👉 <a href="http
 <b>🤖 Bot version: ${config.bot.version}</b>
 
 Creator: <a href="http://raffaelecalza.tk">Raffaele Calzà</a>, buy me a coffee or a beer 🍻 click <a href="http://bit.ly/transmission-bot">here</a>
-Follow me on the socials if you like the project, thanks 😎👍`
-    return helpMsg;
-}
+Follow me on the socials if you like the project, thanks 😎👍`;
 
 // Download the torrent list every minute
-exports.UpdateTorrentList();
+exports.updateTorrentList();
 
-setInterval(exports.UpdateTorrentList, 60000);
+setInterval(exports.updateTorrentList, 60000);

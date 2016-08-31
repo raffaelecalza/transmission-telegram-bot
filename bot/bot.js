@@ -53,7 +53,7 @@ config.bot.users.forEach(user => {
 👉 If you need help, use the /help command
 
 Anyway when a torrent finishes the download, I'll send you a notification 🔔`;
-    bot.sendMessage(user, msg, engine.ListOfCommandsKeyBoard);
+    bot.sendMessage(user, msg, engine.listOfCommandsKeyboard);
 })
 
 // Start message
@@ -61,7 +61,7 @@ bot.onText(/\/start/, function (msg) {
     if (config.bot.users.indexOf(msg.from.id) == -1) return;
     var chatId = msg.chat.id;
     var reply = 'Hi ' + msg.chat.first_name + ' 🙌, I\'m your 🤖\nI\'ve been created to give you all the informations regarding the status of your torrents 😊. Start with /help to get a list of all available commands';
-    bot.sendMessage(chatId, reply, engine.ListOfCommandsKeyBoard);
+    bot.sendMessage(chatId, reply, engine.listOfCommandsKeyboard);
 });
 
 // Get the list of all torrents
@@ -69,11 +69,11 @@ bot.onText(/\/torrentlist|List of all torrents/, function (msg) {
     if (config.bot.users.indexOf(msg.from.id) == -1) return;
     var chatId = msg.chat.id;
 
-    engine.GetTorrentsList((msg) => {
+    engine.getTorrentsList((msg) => {
         if (engine.torrents.length == 0)
-            bot.sendMessage(chatId, engine.NoTorrentText, engine.ListOfCommandsKeyBoard);
+            bot.sendMessage(chatId, engine.noTorrentsText, engine.listOfCommandsKeyboard);
         else
-            bot.sendMessage(chatId, msg, engine.ListOfCommandsKeyBoard);
+            bot.sendMessage(chatId, msg, engine.listOfCommandsKeyboard);
     }, (err) => {
         bot.sendMessage(chatId, err);
     });
@@ -83,14 +83,14 @@ bot.onText(/\/torrentlist|List of all torrents/, function (msg) {
 bot.onText(/\/torrentstatus|Status/, function (msg) {
     if (config.bot.users.indexOf(msg.from.id) == -1) return;
     var chatId = msg.chat.id;
-    var keyb = engine.GetKeyBoard();
+    var keyb = engine.getKeyboard();
     var opts = {
         reply_markup: JSON.stringify({
             keyboard: keyb
         })
     };
     if (engine.torrents.length == 0)
-        bot.sendMessage(chatId, engine.NoTorrentText, engine.ListOfCommandsKeyBoard);
+        bot.sendMessage(chatId, engine.noTorrentsText, engine.listOfCommandsKeyboard);
     else {
         bot.sendMessage(chatId, 'Select a torrent and you\'ll receive all information about it', opts);
         userStates[chatId] = 'details';
@@ -101,7 +101,7 @@ bot.onText(/\/torrentstatus|Status/, function (msg) {
 bot.onText(/\/torrentstart|▶️ Start/, function (msg) {
     if (config.bot.users.indexOf(msg.from.id) == -1) return;
     var chatId = msg.chat.id;
-    var keyb = engine.GetKeyBoardPaused();
+    var keyb = engine.getKeyboardPaused();
     var opts = {
         reply_markup: JSON.stringify({
             keyboard: keyb
@@ -109,9 +109,9 @@ bot.onText(/\/torrentstart|▶️ Start/, function (msg) {
     };
 
     if (engine.torrents.length == 0)
-        bot.sendMessage(chatId, engine.NoTorrentText, engine.ListOfCommandsKeyBoard);
+        bot.sendMessage(chatId, engine.noTorrentsText, engine.listOfCommandsKeyboard);
     else if (keyb.length == 1)
-        bot.sendMessage(chatId, 'All torrents are in download queue', engine.ListOfCommandsKeyBoard);
+        bot.sendMessage(chatId, 'All torrents are in download queue', engine.listOfCommandsKeyboard);
     else {
         bot.sendMessage(chatId, 'Please send me a torrent to put in the download queue 😊', opts);
         userStates[chatId] = 'start';
@@ -122,7 +122,7 @@ bot.onText(/\/torrentstart|▶️ Start/, function (msg) {
 bot.onText(/\/torrentstop|⏸ Pause/, function (msg) {
     if (config.bot.users.indexOf(msg.from.id) == -1) return;
     var chatId = msg.chat.id;
-    var keyb = engine.GetKeyBoardActive();
+    var keyb = engine.getKeyboardActive();
     var opts = {
         reply_markup: JSON.stringify({
             keyboard: keyb
@@ -130,9 +130,9 @@ bot.onText(/\/torrentstop|⏸ Pause/, function (msg) {
     };
 
     if (engine.torrents.length == 0)
-        bot.sendMessage(chatId, engine.NoTorrentText, engine.ListOfCommandsKeyBoard);
+        bot.sendMessage(chatId, engine.noTorrentsText, engine.listOfCommandsKeyboard);
     else if (keyb.length == 1)
-        bot.sendMessage(chatId, "All torrents are currently paused", engine.ListOfCommandsKeyBoard);
+        bot.sendMessage(chatId, "All torrents are currently paused", engine.listOfCommandsKeyboard);
     else {
         bot.sendMessage(chatId, 'Which torrent would you stop?', opts);
         userStates[chatId] = 'stop';
@@ -143,7 +143,7 @@ bot.onText(/\/torrentstop|⏸ Pause/, function (msg) {
 bot.onText(/\/torrentremove|❌ Remove/, function (msg) {
     if (config.bot.users.indexOf(msg.from.id) == -1) return;
     var chatId = msg.chat.id;
-    var keyb = engine.GetKeyBoard();
+    var keyb = engine.getKeyboard();
     var opts = {
         reply_markup: JSON.stringify({
             keyboard: keyb
@@ -151,7 +151,7 @@ bot.onText(/\/torrentremove|❌ Remove/, function (msg) {
     };
 
     if (engine.torrents.length == 0)
-        bot.sendMessage(chatId, engine.NoTorrentText, engine.ListOfCommandsKeyBoard);
+        bot.sendMessage(chatId, engine.noTorrentsText, engine.listOfCommandsKeyboard);
     else {
         bot.sendMessage(chatId, '⚠️ Be careful! Once you remove it, you can not retrieve it\nSend me the torrent that you would remove 😊', opts);
         userStates[chatId] = 'remove';
@@ -165,13 +165,13 @@ bot.onText(/Yes|No/, function (msg) {
     var answer = msg.text;
     
     if (answer == 'Yes')
-        engine.RemoveTorrent(torrentId, (details) => {
-            bot.sendMessage(chatId, 'Torrent correctly removed\nUse /torrentstatus to see the updated torrents list', engine.ListOfCommandsKeyBoard);
+        engine.removeTorrent(torrentId, (details) => {
+            bot.sendMessage(chatId, 'Torrent correctly removed\nUse /torrentstatus to see the updated torrents list', engine.listOfCommandsKeyboard);
         }, (err) => {
-            bot.sendMessage(chatId, err, engine.ListOfCommandsKeyBoard);
+            bot.sendMessage(chatId, err, engine.listOfCommandsKeyboard);
         });
     else
-        bot.sendMessage(chatId, 'The operation was canceled, narrow escape 😪', engine.ListOfCommandsKeyBoard);
+        bot.sendMessage(chatId, 'The operation was canceled, narrow escape 😪', engine.listOfCommandsKeyboard);
 })
 
 bot.onText(/\d+\) .+/, function (msg) {
@@ -183,22 +183,22 @@ bot.onText(/\d+\) .+/, function (msg) {
     var torrentAction = userStates[chatId] || '';
 
     if (torrentAction == 'stop')
-        engine.StopTorrent(torrentId, (details) => {
-            bot.sendMessage(chatId, 'Torrent correctly stopped\nUse /torrentstatus to see the updated torrents list', engine.ListOfCommandsKeyBoard);
+        engine.pauseTorrent(torrentId, (details) => {
+            bot.sendMessage(chatId, 'Torrent correctly stopped\nUse /torrentstatus to see the updated torrents list', engine.listOfCommandsKeyboard);
         }, (err) => {
-            bot.sendMessage(chatId, err, engine.ListOfCommandsKeyBoard);
+            bot.sendMessage(chatId, err, engine.listOfCommandsKeyboard);
         });
     else if (torrentAction == 'details')
-        engine.GetTorrentDetails(torrentId, (details) => {
-            bot.sendMessage(chatId, details, engine.ListOfCommandsKeyBoard);
+        engine.getTorrentDetails(torrentId, (details) => {
+            bot.sendMessage(chatId, details, engine.listOfCommandsKeyboard);
         }, (err) => {
-            bot.sendMessage(chatId, err, engine.ListOfCommandsKeyBoard);
+            bot.sendMessage(chatId, err, engine.listOfCommandsKeyboard);
         });
     else if (torrentAction == 'start')
-        engine.StartTorrent(torrentId, (details) => {
-            bot.sendMessage(chatId, 'Torrent correctly started\nUse /torrentstatus to see the updated torrents list', engine.ListOfCommandsKeyBoard);
+        engine.startTorrent(torrentId, (details) => {
+            bot.sendMessage(chatId, 'Torrent correctly started\nUse /torrentstatus to see the updated torrents list', engine.listOfCommandsKeyboard);
         }, (err) => {
-            bot.sendMessage(chatId, err, engine.ListOfCommandsKeyBoard);
+            bot.sendMessage(chatId, err, engine.listOfCommandsKeyboard);
         });
     else if (torrentAction == 'remove') {
         userStates[chatId] = torrentId;
@@ -215,7 +215,7 @@ bot.onText(/\/addtorrent|Add torrent/, function (msg) {
     if (config.bot.users.indexOf(msg.from.id) == -1) return;
     var chatId = msg.chat.id;
 
-    bot.sendMessage(chatId, 'Please send me a torrent url or send me a torrent file (e.g. file.torrent)', engine.HideKeyBoard);
+    bot.sendMessage(chatId, 'Please send me a torrent url or send me a torrent file (e.g. file.torrent)', engine.hideKeyboard);
     userStates[chatId] = 'add';
 });
 
@@ -224,10 +224,10 @@ bot.onText(/[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//
 
     var torrentAction = userStates[chatId] || '';
     if (torrentAction == 'add')
-        engine.AddTorrent(msg.text, (details) => {
-            bot.sendMessage(chatId, details, engine.ListOfCommandsKeyBoard);
+        engine.addTorrent(msg.text, (details) => {
+            bot.sendMessage(chatId, details, engine.listOfCommandsKeyboard);
         }, (err) => {
-            bot.sendMessage(chatId, err, engine.ListOfCommandsKeyBoard);
+            bot.sendMessage(chatId, err, engine.listOfCommandsKeyboard);
         });
 });
 
@@ -235,17 +235,18 @@ bot.onText(/[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//
 bot.onText(/Cancel/, function (msg) {
     var chatId = msg.chat.id;
     userStates[chatId] = '';
-    bot.sendMessage(chatId, 'The operation was cancelled', engine.ListOfCommandsKeyBoard);
+    bot.sendMessage(chatId, 'The operation was cancelled', engine.listOfCommandsKeyboard);
 })
 
+// Receive a document (for add torrent command)
 bot.on('document', function (msg) {
     var chatId = msg.chat.id;
     var fileId = msg.document.file_id;
     bot.getFileLink(fileId).then((link) => {
-        engine.AddTorrent(link, (details) => {
-            bot.sendMessage(chatId, 'The torrent was added succesfully, here are some information about it\n' + details, engine.ListOfCommandsKeyBoard);
+        engine.addTorrent(link, (details) => {
+            bot.sendMessage(chatId, 'The torrent was added succesfully, here are some information about it\n' + details, engine.listOfCommandsKeyboard);
         }, (err) => {
-            bot.sendMessage(chatId, err, engine.ListOfCommandsKeyBoard);
+            bot.sendMessage(chatId, err, engine.listOfCommandsKeyboard);
         });
     }, (err) => {
         bot.sendMessage(chatId, 'Oops 😰, something seems to have gone wrong while trying to request the link to Telegram servers 😒... Please try again to send the file\nSome details about the error:\n' + JSON.stringify(err));
@@ -256,7 +257,7 @@ bot.on('document', function (msg) {
 bot.onText(/\/settings|⚙ Settings/, function (msg) {
     var chatId = msg.chat.id;
 
-    bot.sendMessage(chatId, '🔜 In coming... 🚀', engine.ListOfCommandsKeyBoard);
+    bot.sendMessage(chatId, '🔜 In coming... 🚀', engine.listOfCommandsKeyboard);
 })
 
 // Help instructions
@@ -264,13 +265,12 @@ bot.onText(/\/help|❔ Help/, function (msg) {
     if (config.bot.users.indexOf(msg.from.id) == -1) return;
     var chatId = msg.chat.id;
 
-    var reply = engine.GetHelpMsg();
-
-    bot.sendMessage(chatId, reply, engine.ListOfCommandsKeyBoard);
+    bot.sendMessage(chatId, engine.helpMsg, engine.listOfCommandsKeyboard);
 });
 
-engine.TorrentCompleted = (msg) => {
+// Callback when a torrent is completed
+engine.torrentCompleted = (msg) => {
     config.bot.users.forEach((userId) => {
-        bot.sendMessage(userId, msg, engine.ListOfCommandsKeyBoard);
+        bot.sendMessage(userId, msg, engine.listOfCommandsKeyboard);
     });
 };
