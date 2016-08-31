@@ -70,6 +70,9 @@ Handlebars.registerHelper('speed', (value) => {
     return pretty(value);
 })
 Handlebars.registerHelper('parseDate', (date) => {
+    // See #10
+    if(date == 0) return new Date();
+    
     var mEpoch = parseInt(date);
     mEpoch *= 1000;
     return new Date(mEpoch);
