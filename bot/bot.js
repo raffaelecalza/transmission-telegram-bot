@@ -262,7 +262,7 @@ bot.onText(/\/settings|⚙ Settings/, function (msg) {
     if (config.bot.users.indexOf(msg.from.id) == -1) return;
     var chatId = msg.chat.id;
 
-    bot.sendMessage(chatId, 'What would you change?', engine.settingsKeyboard);
+    bot.sendMessage(chatId, 'Please select one voice from the list', engine.settingsKeyboard);
 })
 
 bot.onText(/🔙 menu/, function(msg) {
@@ -272,23 +272,21 @@ bot.onText(/🔙 menu/, function(msg) {
     bot.sendMessage(chatId, 'What would you see?', engine.listOfCommandsKeyboard);
 })
 
-bot.onText(/Bot notification/, function(msg) {
-    if (config.bot.users.indexOf(msg.from.id) == -1) return;
-    
-})
-
 bot.onText(/Transmission info/, function(msg) {
     if (config.bot.users.indexOf(msg.from.id) == -1) return;
     var chatId = msg.chat.id;
-    engine.getSessionDetails((msg) => bot.sendMessage(chatId, msg, engine.settingsKeyboard));
+    engine.getSessionDetails((msg) => {
+        bot.sendMessage(chatId, msg, engine.settingsKeyboard);
+    });
 })
 
 bot.onText(/Set download folder/, function(msg) {
     if (config.bot.users.indexOf(msg.from.id) == -1) return;
     var chatId = msg.chat.id;
-    userStates[chatId] = 'set-folder';
+    userStates[chatId] = 'set-folder' || '';
     bot.sendMessage(chatId, 'Please send me the new folder where next torrents will be downloaded', engine.hideKeyboard);
 })
+
 bot.onText(/(\/\w+)+\//g, function(msg) {
     if (config.bot.users.indexOf(msg.from.id) == -1) return;
     var chatId = msg.chat.id;
@@ -298,11 +296,6 @@ bot.onText(/(\/\w+)+\//g, function(msg) {
         }, (err) => {
             bot.sendMessage(chatId, err, engine.settingsKeyboard);
         });
-})
-
-bot.onText(/Set upload and download limits/, function(msg) {
-    if (config.bot.users.indexOf(msg.from.id) == -1) return;
-    
 })
 
 // End of settings
