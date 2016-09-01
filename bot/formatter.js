@@ -98,7 +98,7 @@ Handlebars.registerHelper('differenceBeetwenDates', (firstDate, secondDate) => {
         string = 'Time not available';
     return string;
 })
-
+Handlebars.registerHelper('enableOrNot', (enable) => {return enable ? 'enabled' : 'not enabled'})
 /* Torrents list template */
 let torrentsListTemplate = `<strong>List of current torrents and their status:</strong>
 {{#each this}}
@@ -151,3 +151,22 @@ Size: {{speed sizeWhenDone}}
 Debug: doneDate = {{doneDate}}
 `;
 exports.formatComplete = Handlebars.compile(completeTorrentTemplate, {noEscape: true});
+
+/* Session details */
+let sessionDetailsTemplate = `<strong>Transmission version: {{version}}</strong>
+Config dir: <pre>{{config-dir}}</pre>
+
+<strong>Free space: {{speed download-dir-free-space}}</strong>
+Download directory: <pre>{{download-dir}}</pre>
+Incomplete directory{{#if incomplete-dir-enabled}}: <pre>{{incomplete-dir}}</pre>{{else}} <strong>not enabled</strong>{{/if}}
+
+⬇️ Speed limit{{#if speed-limit-down-enabled}}: {{speed-limit-down}}kB/s{{else}} not enabled{{/if}}
+⬆️ Speed limit{{#if speed-limit-up-enabled}}: {{speed-limit-up}}kB/s{{else}} not enabled{{/if}}
+
+👥 Peers limit:
+• Global = {{peer-limit-global}}
+• Per torrent = {{peer-limit-per-torrent}}
+
+Download queue {{enableOrNot download-queue-enabled}}
+`;
+exports.sessionDetails = Handlebars.compile(sessionDetailsTemplate, {noEscape: true});

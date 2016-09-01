@@ -173,6 +173,24 @@ exports.hideKeyboard = {
     })
 }
 
+// Settings
+exports.settingsKeyboard = {
+    reply_markup: JSON.stringify({
+        keyboard: [['Cancel'], ['Enable notification'],['Get session details'], ['Set download folder'], ['Set upload and download limits']]
+    }),
+    parse_mode: 'html'
+}
+
+exports.getSessionDetails = (callback) => {
+    transmission.session(function(err, arg) {
+        if(err)
+            callback(formatter.errorMessage(err));
+        else
+            callback(formatter.sessionDetails(arg));
+    });
+}
+// End of settings
+
 // String to send when the list of torrents is empty
 exports.noTorrentsText = 'Mmh 😕 it seems that there isn\'t any torrent in the list...\nAdd one by using the /addtorrent command 😉';
 

@@ -257,8 +257,29 @@ bot.on('document', function (msg) {
 bot.onText(/\/settings|⚙ Settings/, function (msg) {
     var chatId = msg.chat.id;
 
-    bot.sendMessage(chatId, '🔜 In coming... 🚀', engine.listOfCommandsKeyboard);
+    bot.sendMessage(chatId, 'What would you change?', engine.settingsKeyboard);
 })
+
+bot.onText(/Enable notification/, function(msg) {
+    
+})
+
+bot.onText(/Get session details/, function(msg) {
+    var chatId = msg.chat.id;
+    engine.getSessionDetails((msg) => bot.sendMessage(chatId, msg, engine.settingsKeyboard));
+})
+
+bot.onText(/Set download folder/, function(msg) {
+    var chatId = msg.chat.id;
+    userStates[chatId] = 'set-folder';
+    bot.sendMessage(chatId, 'Please send me the new folder where next torrents will be downloaded', engine.hideKeyboard);
+})
+
+bot.onText(/Set upload and download limits/, function(msg) {
+    
+})
+
+// End of settings
 
 // Help instructions
 bot.onText(/\/help|❔ Help/, function (msg) {
