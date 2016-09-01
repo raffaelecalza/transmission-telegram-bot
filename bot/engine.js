@@ -176,7 +176,7 @@ exports.hideKeyboard = {
 // Settings
 exports.settingsKeyboard = {
     reply_markup: JSON.stringify({
-        keyboard: [['Cancel'], ['Enable notification'],['Get session details'], ['Set download folder'], ['Set upload and download limits']]
+        keyboard: [['Cancel'], ['Bot notification'],['Transmission info'], ['Set download folder'], ['Set upload and download limits']]
     }),
     parse_mode: 'html'
 }
@@ -187,6 +187,14 @@ exports.getSessionDetails = (callback) => {
             callback(formatter.errorMessage(err));
         else
             callback(formatter.sessionDetails(arg));
+    });
+}
+exports.setSettings = (command, success, error) => {
+    transmission.session(command, function(err, arg) {
+        if(err)
+            error(formatter.errorMessage(err));
+        else
+            success(); 
     });
 }
 // End of settings
