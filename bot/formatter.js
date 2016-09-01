@@ -148,7 +148,6 @@ let completeTorrentTemplate = `Oh, a torrent has been downloaded completely 🙌
 Size: {{speed sizeWhenDone}}
 
 📂 {{downloadDir}}
-Debug: doneDate = {{doneDate}}
 `;
 exports.formatComplete = Handlebars.compile(completeTorrentTemplate, {noEscape: true});
 
