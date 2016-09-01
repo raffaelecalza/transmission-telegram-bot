@@ -173,6 +173,32 @@ exports.hideKeyboard = {
     })
 }
 
+// Settings
+exports.settingsKeyboard = {
+    reply_markup: JSON.stringify({
+        keyboard: [['🔙 menu'], ['Transmission info'], ['Set download folder']]
+    }),
+    parse_mode: 'html'
+}
+
+exports.getSessionDetails = (callback) => {
+    transmission.session(function(err, arg) {
+        if(err)
+            callback(formatter.errorMessage(err));
+        else
+            callback(formatter.sessionDetails(arg));
+    });
+}
+exports.setSettings = (command, success, error) => {
+    transmission.session(command, function(err, arg) {
+        if(err)
+            error(formatter.errorMessage(err));
+        else
+            success(); 
+    });
+}
+// End of settings
+
 // String to send when the list of torrents is empty
 exports.noTorrentsText = 'Mmh 😕 it seems that there isn\'t any torrent in the list...\nAdd one by using the /addtorrent command 😉';
 
