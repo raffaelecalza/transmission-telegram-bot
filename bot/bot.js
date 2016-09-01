@@ -159,6 +159,7 @@ bot.onText(/\/torrentremove|❌ Remove/, function (msg) {
 })
 
 bot.onText(/Yes|No/, function (msg) {
+    if (config.bot.users.indexOf(msg.from.id) == -1) return;
     var chatId = msg.chat.id;
 
     var torrentId = userStates[chatId] || '';
@@ -220,6 +221,7 @@ bot.onText(/\/addtorrent|Add torrent/, function (msg) {
 });
 
 bot.onText(/[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/, function (msg) {
+    if (config.bot.users.indexOf(msg.from.id) == -1) return;
     var chatId = msg.chat.id;
 
     var torrentAction = userStates[chatId] || '';
@@ -233,6 +235,7 @@ bot.onText(/[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//
 
 // Cancel Operation
 bot.onText(/Cancel/, function (msg) {
+    if (config.bot.users.indexOf(msg.from.id) == -1) return;
     var chatId = msg.chat.id;
     userStates[chatId] = '';
     bot.sendMessage(chatId, 'The operation was cancelled', engine.listOfCommandsKeyboard);
@@ -240,6 +243,7 @@ bot.onText(/Cancel/, function (msg) {
 
 // Receive a document (for add torrent command)
 bot.on('document', function (msg) {
+    if (config.bot.users.indexOf(msg.from.id) == -1) return;
     var chatId = msg.chat.id;
     var fileId = msg.document.file_id;
     bot.getFileLink(fileId).then((link) => {
@@ -255,26 +259,31 @@ bot.on('document', function (msg) {
 
 // Settings command
 bot.onText(/\/settings|⚙ Settings/, function (msg) {
+    if (config.bot.users.indexOf(msg.from.id) == -1) return;
     var chatId = msg.chat.id;
 
     bot.sendMessage(chatId, 'What would you change?', engine.settingsKeyboard);
 })
 
 bot.onText(/Bot notification/, function(msg) {
+    if (config.bot.users.indexOf(msg.from.id) == -1) return;
     
 })
 
 bot.onText(/Transmission info/, function(msg) {
+    if (config.bot.users.indexOf(msg.from.id) == -1) return;
     var chatId = msg.chat.id;
     engine.getSessionDetails((msg) => bot.sendMessage(chatId, msg, engine.settingsKeyboard));
 })
 
 bot.onText(/Set download folder/, function(msg) {
+    if (config.bot.users.indexOf(msg.from.id) == -1) return;
     var chatId = msg.chat.id;
     userStates[chatId] = 'set-folder';
     bot.sendMessage(chatId, 'Please send me the new folder where next torrents will be downloaded', engine.hideKeyboard);
 })
 bot.onText(/(\/\w+)+\//g, function(msg) {
+    if (config.bot.users.indexOf(msg.from.id) == -1) return;
     var chatId = msg.chat.id;
     if(userStates[chatId] == 'set-folder')
         engine.setSettings({'download-dir': msg.text}, () => {
@@ -285,6 +294,7 @@ bot.onText(/(\/\w+)+\//g, function(msg) {
 })
 
 bot.onText(/Set upload and download limits/, function(msg) {
+    if (config.bot.users.indexOf(msg.from.id) == -1) return;
     
 })
 
