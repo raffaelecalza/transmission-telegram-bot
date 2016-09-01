@@ -265,6 +265,13 @@ bot.onText(/\/settings|⚙ Settings/, function (msg) {
     bot.sendMessage(chatId, 'What would you change?', engine.settingsKeyboard);
 })
 
+bot.onText(/🔙 menu/, function(msg) {
+    if (config.bot.users.indexOf(msg.from.id) == -1) return;
+    
+    var chatId = msg.chat.id;
+    bot.sendMessage(chatId, 'What would you see?', engine.listOfCommandsKeyboard);
+})
+
 bot.onText(/Bot notification/, function(msg) {
     if (config.bot.users.indexOf(msg.from.id) == -1) return;
     

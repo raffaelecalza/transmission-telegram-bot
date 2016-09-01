@@ -176,7 +176,7 @@ exports.hideKeyboard = {
 // Settings
 exports.settingsKeyboard = {
     reply_markup: JSON.stringify({
-        keyboard: [['Cancel'], ['Bot notification'],['Transmission info'], ['Set download folder'], ['Set upload and download limits']]
+        keyboard: [['🔙 menu'], ['Bot notification'],['Transmission info'], ['Set download folder'], ['Set upload and download limits']]
     }),
     parse_mode: 'html'
 }
