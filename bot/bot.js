@@ -14,14 +14,23 @@
 const TelegramBot = require('node-telegram-bot-api');
 const DateTime = require('date-and-time');
 const engine = require('./engine.js');
+const NotificationManager = require('./notification-manager.js');
 
 const config = require('./config.json');
+
 var userStates = {};
-var userNotification = {};
-// Enable notification for each user
-config.bot.users.forEach((user) => {
-    userNotification[user] = true;
-});
+var userNotification;
+
+if(NotificationManager.fileExists())
+    userNotification = NotificationManager.loadFile();
+else {
+    userNotification = {};
+    // Enable notification for each user
+    config.bot.users.forEach((user) => {
+        userNotification[user] = true;
+    });
+    NotificationManager.saveFile(userNotification);
+}
 
 console.log('Initializing the bot...')
 const bot = new TelegramBot(config.bot.token, {
@@ -307,6 +316,7 @@ bot.onText(/Enable|Disable/, function(msg) {
         userNotification[chatId] = false;
         bot.sendMessage(chatId, 'Notification disabled 🔕, you\'ll not receive any notification when a torrent is downloaded completely', engine.settingsKeyboard);
     }
+    NotificationManager.saveFile(userNotification);
 })
 
 bot.onText(/Set download folder/, function(msg) {
