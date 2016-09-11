@@ -17,6 +17,11 @@ const engine = require('./engine.js');
 
 const config = require('./config.json');
 var userStates = {};
+var userNotification = {};
+// Enable notification for each user
+config.bot.users.forEach((user) => {
+    userNotification[user] = true;
+});
 
 console.log('Initializing the bot...')
 const bot = new TelegramBot(config.bot.token, {
@@ -47,13 +52,15 @@ Message text: ${msg.text || 'no text'}
 });
 
 console.log('-------- Notify autorizhed users that the bot is up --------');
-config.bot.users.forEach(user => {
-    var msg = `Hey, I woke up just now 😎 and I'm ready to respond to your commands 🙌
+const wokeUpMsg = `Hey, I woke up just now 😎 and I'm ready to respond to your commands 🙌
 
 👉 If you need help, use the /help command
 
 Anyway when a torrent finishes the download, I'll send you a notification 🔔`;
-    bot.sendMessage(user, msg, engine.listOfCommandsKeyboard);
+
+config.bot.users.forEach(user => {
+    if(userNotification[user])
+        bot.sendMessage(user, wokeUpMsg, engine.listOfCommandsKeyboard);
 })
 
 // Start message
@@ -280,6 +287,28 @@ bot.onText(/Transmission info/, function(msg) {
     });
 })
 
+bot.onText(/User notification/, function(msg) {
+    if (config.bot.users.indexOf(msg.from.id) == -1) return;
+    var chatId = msg.chat.id;
+    bot.sendMessage(chatId, 'Would you enable or disable the notifications?', {
+        reply_markup: JSON.stringify({
+            keyboard: [['Enable', 'Disable']]
+        })
+    });
+})
+
+bot.onText(/Enable|Disable/, function(msg) {
+    if (config.bot.users.indexOf(msg.from.id) == -1) return;
+    var chatId = msg.chat.id;
+    if(msg.text == 'Enable') {
+        userNotification[chatId] = true;
+        bot.sendMessage(chatId, 'Notifications enabled 🔔, you\'ll receive a message when a torrent is completely downloaded', engine.settingsKeyboard);
+    } else if(msg.text == 'Disable') {
+        userNotification[chatId] = false;
+        bot.sendMessage(chatId, 'Notification disabled 🔕, you\'ll not receive any notification when a torrent is downloaded completely', engine.settingsKeyboard);
+    }
+})
+
 bot.onText(/Set download folder/, function(msg) {
     if (config.bot.users.indexOf(msg.from.id) == -1) return;
     var chatId = msg.chat.id;
@@ -311,6 +340,7 @@ bot.onText(/\/help|❔ Help/, function (msg) {
 // Callback when a torrent is completed
 engine.torrentCompleted = (msg) => {
     config.bot.users.forEach((userId) => {
-        bot.sendMessage(userId, msg, engine.listOfCommandsKeyboard);
+        if(userNotification[userId])
+            bot.sendMessage(userId, msg, engine.listOfCommandsKeyboard);
     });
 };
