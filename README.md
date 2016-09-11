@@ -23,7 +23,7 @@ So, you want to controll your torrent status from anywhere in the world, but you
 * <b>Add torrent</b> - Add a torrent from a <code>.torrent</code> file or from an url;
 
 ## How to install it
-Clone the repository with <code>git clone https://github.com/raffaelecalza/transmission-telegram-bot.git</code> or download it as a zip file.
+Clone the repository with <code>git clone https://github.com/raffaelecalza/transmission-telegram-bot.git</code> or download it as a zip file from [here](https://github.com/raffaelecalza/transmission-telegram-bot/releases/latest).
 ### 1) Register your bot name
 First of all you have to register your bot's name. To do this, begin a new chat to <b>@BotFather</b>. Send <code>/newbot</code> command. Then send  to him the name of your bot (e.g. My Wonderful Bot). Then send a username for the bot (NOTE: this must end with the word 'bot'), e.g. MyWonderfulBot. After that the Bot Father will send you a message that contains the TOKEN for the bot. Save it because in the fourth step we'll use it.<br />
 <img src="https://github.com/raffaelecalza/transmission-telegram-bot/blob/master/screenshot/1.jpg?raw=true" width="33%" /> <img src="https://github.com/raffaelecalza/transmission-telegram-bot/blob/master/screenshot/2.jpg?raw=true" width="33%" /> <img src="https://github.com/raffaelecalza/transmission-telegram-bot/blob/master/screenshot/3.jpg?raw=true" width="33%" />
