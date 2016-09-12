@@ -157,8 +157,8 @@ exports.removeTorrent = (id, success, error) => {
 exports.listOfCommandsKeyboard = {
     reply_markup: JSON.stringify({
         keyboard: [
-            ['List of all torrents'],
-            ['Status', 'Add torrent'],
+            ['📋 List of all torrents'],
+            ['📈 Status', '➕ Add torrent'],
             ['▶️ Start', '⏸ Pause', '❌ Remove'],
             ['⚙ Settings', '❔ Help']
         ]
@@ -176,7 +176,7 @@ exports.hideKeyboard = {
 // Settings
 exports.settingsKeyboard = {
     reply_markup: JSON.stringify({
-        keyboard: [['🔙 menu'], ['Transmission info'], ['Set download folder']]
+        keyboard: [['🔙 menu'], ['🖥 Transmission info'], ['🔔 User notification'], ['📂 Set download folder']]
     }),
     parse_mode: 'html'
 }
