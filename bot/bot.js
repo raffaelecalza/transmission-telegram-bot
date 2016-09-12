@@ -301,7 +301,7 @@ bot.onText(/User notification/, function(msg) {
     var chatId = msg.chat.id;
     bot.sendMessage(chatId, 'Would you enable or disable the notifications?', {
         reply_markup: JSON.stringify({
-            keyboard: [['Enable', 'Disable']]
+            keyboard: [['Enable', 'Disable'], ['Cancel']]
         })
     });
 })
