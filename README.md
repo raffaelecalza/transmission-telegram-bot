@@ -75,8 +75,10 @@ In the transmission section, insert the ip address of the computer where transmi
 If you don't know your chat id, open a terminal and go to your bot repo's folder, open the <code>bot/</code> folder then start your bot (after have installed all packages in the 3 step) with the command <code>node bot.js</code>. Try to send a message to your bot, you'll see in the console your chat id, hit <code>Ctrl + C</code> to stop the bot and insert your chat id in the config file.<br />
 **NOTE: you must have inserted at least the bot token in the config file but i recommend you to configure also Transmission before running your bot.**
 <h4 align="center"><img src="https://github.com/raffaelecalza/transmission-telegram-bot/blob/master/screenshot/5.gif?raw=true" /></h4>
+
 ### 5) Run your bot
 Now you haven't to wait anymore, go to your bot folder and type <code>pm2 start bot.js</code>. Then your bot will start in background.
+
 ## NOTE
 If you shutdown or reboot your PC, PM2 will stop your application so you have to re-run your bot every time with the command <code>pm2 start bot.js</code>.
 ## Report bugs or suggestions
