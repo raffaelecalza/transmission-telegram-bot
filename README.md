@@ -42,6 +42,7 @@ settings - Set your preferences
 help - Get the list of available commands
 ```
 <h4 align="center"><img src="https://github.com/raffaelecalza/transmission-telegram-bot/blob/master/screenshot/4.jpg?raw=true" width="33%" /></h4>
+
 ### 3) Install NodeJS, NPM and PM2
 Go to the [next step](#4-configure-your-bot) if you have already installed NodeJS, NPM and PM2.
 #### Install NodeJS and NPM
