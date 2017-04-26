@@ -18,13 +18,13 @@ console.log('Configuring transmission session');
 const transmission = new Transmission({
     port: config.transmission.port,
     host: config.transmission.address,
-    username: config.transmission.username,
-    password: config.transmission.password
+    username: config.transmission.credentials.username,
+    password: config.transmission.credentials.password
 });
 console.log(`-------- Session configured --------
 IP address and port --> ${config.transmission.address}:${config.transmission.port}
-Username: ${config.transmission.username|| 'none'}
-Password: ${config.transmission.password || 'none'}
+Username: ${config.transmission.credentials.username|| 'none'}
+Password: ${config.transmission.credentials.password || 'none'}
 `);
 
 var exports = module.exports = {};
