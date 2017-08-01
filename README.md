@@ -52,7 +52,7 @@ For linux users, follow this guide (https://nodejs.org/en/download/package-manag
 #### Install all project dependencies
 Open up a terminal, go to your bot's folder and then run <code>npm install</code>.
 #### Install PM2
-For running your bot forever and as a daemon, you have to install a simple library called PM2 - Process Manager 2. So, Open a console and type <code>sudo npm install -g pm2</code>. If everything goes right try to type this command in the terminal <code>pm2 status</code>, and tou should see an empty list of applications.
+For running your bot forever and as a daemon, you have to install a simple library called PM2 - Process Manager 2. So, Open a console and type <code>sudo npm install -g pm2</code>. If everything goes right try to type this command in the terminal <code>pm2 status</code>, and you should see an empty list of applications.
 ### 4) Configure your bot
 Now, open the config.json file with a text editor. Replace the token string with your bot's token. If you already know your chats id insert it in the array.
 In the transmission section, insert the ip address of the computer where transmission is installed (localhost if the bot runs in the same machine). Insert your username and password if you've set it, otherwise leave this fileds empty (don't delete them). The last step is to specify the number of the port (if you have changed it).
