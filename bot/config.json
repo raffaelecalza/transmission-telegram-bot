@@ -6,6 +6,7 @@
     },
     "transmission": {
         "address": "ipaddress",
+        "path": "/transmission/rpc",
         "credentials": {
             "username": "",
             "password": ""

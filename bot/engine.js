@@ -1,12 +1,12 @@
 'use strict'
 /*
-  _______                            _         _               ____        _   
- |__   __|                          (_)       (_)             |  _ \      | |  
-    | |_ __ __ _ _ __  ___ _ __ ___  _ ___ ___ _  ___  _ __   | |_) | ___ | |_ 
+  _______                            _         _               ____        _
+ |__   __|                          (_)       (_)             |  _ \      | |
+    | |_ __ __ _ _ __  ___ _ __ ___  _ ___ ___ _  ___  _ __   | |_) | ___ | |_
     | | '__/ _` | '_ \/ __| '_ ` _ \| / __/ __| |/ _ \| '_ \  |  _ < / _ \| __|
-    | | | | (_| | | | \__ \ | | | | | \__ \__ \ | (_) | | | | | |_) | (_) | |_ 
+    | | | | (_| | | | \__ \ | | | | | \__ \__ \ | (_) | | | | | |_) | (_) | |_
     |_|_|  \__,_|_| |_|___/_| |_| |_|_|___/___/_|\___/|_| |_| |____/ \___/ \__|
-    
+
     © 2016 - Calzà Raffaele (raffaelecalza4@gmail.com)
     Github repository: https://github.com/raffaelecalza/transmission-telegram-bot
 */
@@ -18,6 +18,7 @@ console.log('Configuring transmission session');
 const transmission = new Transmission({
     port: config.transmission.port,
     host: config.transmission.address,
+    url: config.transmission.path,
     username: config.transmission.credentials.username,
     password: config.transmission.credentials.password
 });
@@ -194,7 +195,7 @@ exports.setSettings = (command, success, error) => {
         if(err)
             error(formatter.errorMessage(err));
         else
-            success(); 
+            success();
     });
 }
 // End of settings
