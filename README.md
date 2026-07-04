@@ -5,14 +5,18 @@
   Transmission Bot for Telegram
   <br>
 </h1>
-<p align="center">Do you like the project? <a href="http://bit.ly/transmission-bot">Buy me a coffee or a beer 🍻</a></p>
-So, you want to controll your torrent status from anywhere in the world, but you don't know how to do this, right? Here is the solution, this is a simple telegram bot that allows you to check the status of your torrents, add, stop, remove, briefly these are all the basic actions that you do with the program or web interface.
+
+> [!WARNING]
+> **This repository is no longer maintained**
+>
+> This project is **archived** and now read-only. No further development, bug fixes, security patches, or issue triage will be provided.
+
+So, you want to control your torrent status from anywhere in the world, but you don't know how to do this, right? Here is the solution, this is a simple telegram bot that allows you to check the status of your torrents, add, stop, remove, briefly these are all the basic actions that you do with the program or web interface.
 
 #### Summary:
 * [List of available commands](#available-commands)
 * [How to install it](#how-to-install-it)
 * [Note](#note)
-* [Bugs, support and suggestions](#report-bugs-or-suggestions)
 
 ## Available commands
 * <b>List of all torrents</b>;
@@ -81,5 +85,3 @@ Now you haven't to wait anymore, go to your bot folder and type <code>pm2 start 
 
 ## NOTE
 If you shutdown or reboot your PC, PM2 will stop your application so you have to re-run your bot every time with the command <code>pm2 start bot.js</code>.
-## Report bugs or suggestions
-If you have discovered a bug or if you have a suggestion, please open an issue or send me an email (raffaelecalza4@gmail.com)
